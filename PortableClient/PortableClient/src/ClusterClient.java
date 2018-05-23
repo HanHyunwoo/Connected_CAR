@@ -8,17 +8,18 @@ import java.net.UnknownHostException;
 
 public class ClusterClient extends Thread {
 	String TAG = "ClusterClient ::: ";
+	
+	private ConnectionManager connectionManager;
+	private Socket socket;
 
 	boolean cflag = true;
 	boolean flag = true;
-	Socket socket;
 
-	public ClusterClient() {
-
+	public ClusterClient(ConnectionManager connectionManager) {
+		this.connectionManager = connectionManager;
 	}
 
 	@Override
-
 	public void run() {
 		// 재접속을 위한 while
 		while (cflag) {
@@ -40,17 +41,11 @@ public class ClusterClient extends Thread {
 			}
 		}
 
-		// After Connected . .
 		try {
 			new Receiver(socket).start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		sendMsg("1,10");
-		sendMsg("2,20");
-		sendMsg("3,0");
-		sendMsg("4,1");
 	}
 
 	public void sendMsg(String msg) {
@@ -82,13 +77,10 @@ public class ClusterClient extends Thread {
 		}
 
 		public void setSendMsg(String sendMsg) {
-
 			this.sendMsg = sendMsg;
-
 		}
 
 		@Override
-
 		public void run() {
 			try {
 				if (outw != null) {
@@ -99,7 +91,6 @@ public class ClusterClient extends Thread {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	class Receiver extends Thread {
@@ -114,12 +105,12 @@ public class ClusterClient extends Thread {
 		}
 
 		@Override
-
 		public void run() {
 			try {
 				while (flag == true && din != null) {
-					String str = din.readUTF();
-					System.out.println(TAG + "recieve MSG : " + str);
+					String msg = din.readUTF();
+					System.out.println(TAG + "recieve from server : " + msg);
+					connectionManager.SendToCar(msg);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -127,14 +118,12 @@ public class ClusterClient extends Thread {
 				try {
 					if (din != null)
 						din.close();
-
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 
 		}
-
 	}
 
 	public void stopClient() {

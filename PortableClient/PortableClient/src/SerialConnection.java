@@ -1,5 +1,4 @@
 
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +11,8 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-public class SerialTest implements SerialPortEventListener {
-	// CommPortIdentifier commPortIdentifier;
-	private static String TAG = "SerialTest :: ";
+public class SerialConnection implements SerialPortEventListener {
+	private static String TAG = "SerialConnection :: ";
 	private BufferedInputStream bin;
 	private InputStream in;
 	private OutputStream out;
@@ -22,29 +20,27 @@ public class SerialTest implements SerialPortEventListener {
 	private CommPortIdentifier portIdentifier;
 	private CommPort commPort;
 
-	private ClusterClient clusterClient;
-	private IVIClient iviClient;
+	private ConnectionManager connectionManager;
 	
-	public SerialTest() {
-		clusterClient = new ClusterClient();
-		clusterClient.start();
-		iviClient = new IVIClient();
-		iviClient.start();
+	private int IDSTART = 4;
+	private int DATASTART = 12;
+	private int DATAEND = 28;
+	public SerialConnection() {
+
 	}
 
-	public SerialTest(String portName) throws NoSuchPortException {
-		this();
-		portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-		System.out.println("Connect Com Port");
+	public SerialConnection(String portName, ConnectionManager connectionManager) throws NoSuchPortException {
+		this.connectionManager = connectionManager;
+		this.portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+
 		try {
 			connectSerial();
-			System.out.println("Connect OK !!");
+			System.out.println(TAG + portName + " PORT connected");
 			(new Thread(new SerialWriter())).start();
 		} catch (Exception e) {
-			System.out.println("Connect Fail !!");
+			System.out.println(TAG + "connect Fail");
 			e.printStackTrace();
 		}
-		
 	}
 
 	public void connectSerial() throws Exception {
@@ -69,14 +65,13 @@ public class SerialTest implements SerialPortEventListener {
 			}
 		}
 	}
-	
+
 	// 보내는 역할
 	public void sendMsg(String msg) {
-		// :W28 00000000 0000000000000000 53 \r	
 		SerialWriter sw = new SerialWriter(msg);
 		new Thread(sw).start();
 	}
-	
+
 	private class SerialWriter implements Runnable {
 		String data;
 
@@ -106,31 +101,11 @@ public class SerialTest implements SerialPortEventListener {
 
 		public void run() {
 			try {
-
 				byte[] inputData = data.getBytes();
 				out.write(inputData);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-
-	}
-
-	public static void main(String[] args) {
-		System.out.println("SerialTest");
-
-		SerialTest serialTest = null;
-		// Try Connection with car  
-		while (true) {
-			try {
-				System.out.println(TAG + "Try Connecting Car ..");
-				serialTest = new SerialTest("COM5");
-				System.out.println(TAG + "Connected Car ..");
-				break;
-			} catch (NoSuchPortException e) {
-				System.out.println(TAG + "Connected Retry ..");
-				e.printStackTrace();
-			}			
 		}
 	}
 
@@ -154,21 +129,20 @@ public class SerialTest implements SerialPortEventListener {
 				while (bin.available() > 0) {
 					int numBytes = bin.read(readBuffer);
 				}
-				
+
 				String buffer = new String(readBuffer).trim();
-				System.out.println(buffer);
-				if(buffer.equals(Common.CANINITCODE)) {
+				System.out.println("Receive Low Data:" + buffer);
+
+				if (buffer.equals(Common.CANINITCODE)) {
 					System.out.println(TAG + "START CAN RECEIVER");
 					break;
 				}
-				
-				String header = buffer.substring(0, 4);
-				String id = buffer.substring(5, 12);
-				String data = buffer.substring(13, 13+16);
-				System.out.println("Receive Low Data:" + buffer);
 
-				iviClient.sendMsg(id+","+data);
-				clusterClient.sendMsg(id+","+data);			
+				String id = buffer.substring(IDSTART, DATASTART-1);
+				String data = buffer.substring(DATASTART, DATAEND);
+				
+				connectionManager.SendToCluster(id + "," + data);
+				connectionManager.SendToIVI(id + "," + data);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

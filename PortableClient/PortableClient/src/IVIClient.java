@@ -7,14 +7,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class IVIClient extends Thread {
-
 	String TAG = "IVIClient ::: ";
+	
+	private ConnectionManager connectionManager;
+	private Socket socket;
+	
 	boolean cflag = true;
 	boolean flag = true;
-	Socket socket;
-	
-	public IVIClient() {
 
+	public IVIClient(ConnectionManager connectionManager) {
+		this.connectionManager = connectionManager;
 	}
 
 	@Override
@@ -114,8 +116,9 @@ public class IVIClient extends Thread {
 		public void run() {
 			try {
 				while (flag == true && din != null) {
-					String str = din.readUTF();
-					System.out.println(TAG + "recieve MSG : " + str);
+					String msg = din.readUTF();
+					System.out.println(TAG + "recieve MSG : " + msg);
+					connectionManager.SendToCar(msg);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -128,9 +131,7 @@ public class IVIClient extends Thread {
 					e.printStackTrace();
 				}
 			}
-
 		}
-
 	}
 
 	public void stopClient() {
