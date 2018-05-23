@@ -128,6 +128,7 @@ public class SerialTest implements SerialPortEventListener {
 				System.out.println(TAG + "Try Connecting Car ..");
 				serialTest = new SerialTest("COM5");
 				System.out.println(TAG + "Connected Car ..");
+				break;
 			} catch (NoSuchPortException e) {
 				System.out.println(TAG + "Connected Retry ..");
 				e.printStackTrace();
@@ -152,7 +153,6 @@ public class SerialTest implements SerialPortEventListener {
 			byte[] readBuffer = new byte[128];
 
 			try {
-
 				while (bin.available() > 0) {
 					int numBytes = bin.read(readBuffer);
 				}
