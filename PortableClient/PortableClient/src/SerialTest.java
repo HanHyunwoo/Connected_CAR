@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -14,7 +16,7 @@ import gnu.io.SerialPortEventListener;
 
 public class SerialTest implements SerialPortEventListener {
 	// CommPortIdentifier commPortIdentifier;
-
+	private static String TAG = "SerialTest :: ";
 	private BufferedInputStream bin;
 	private InputStream in;
 	private OutputStream out;
@@ -120,18 +122,17 @@ public class SerialTest implements SerialPortEventListener {
 		System.out.println("SerialTest");
 
 		SerialTest serialTest = null;
-
-		try {
-			serialTest = new SerialTest("COM5");
-			String str = "w28000000000000000001100000";
-			serialTest.sendMsg(str);
-		} catch (NoSuchPortException e) {
-			System.out.println("connect Fail !");
-			e.printStackTrace();
+		// Try Connection with car  
+		while (true) {
+			try {
+				System.out.println(TAG + "Try Connecting Car ..");
+				serialTest = new SerialTest("COM5");
+				System.out.println(TAG + "Connected Car ..");
+			} catch (NoSuchPortException e) {
+				System.out.println(TAG + "Connected Retry ..");
+				e.printStackTrace();
+			}			
 		}
-		
-		Client client = new Client();
-		client.start();
 	}
 
 	@Override
@@ -155,11 +156,15 @@ public class SerialTest implements SerialPortEventListener {
 				while (bin.available() > 0) {
 					int numBytes = bin.read(readBuffer);
 				}
-
-				String ss = new String(readBuffer);
-				System.out.println("Receive Low Data:" + ss + "||");
-				iviClient.sendMsg(ss);
-				clusterClient.sendMsg(ss);
+				
+				// :W28 00000000 0000000000000000 53 \r					
+				String buffer = new String(readBuffer);
+				String header = buffer.substring(0, 4);
+				String id = buffer.substring(5, 12);
+				String data = buffer.substring(13, 13+16);
+				System.out.println("Receive Low Data:" + buffer + "||");
+				iviClient.sendMsg(id+","+data);
+				clusterClient.sendMsg(id+","+data);
 				
 			} catch (Exception e) {
 				e.printStackTrace();
