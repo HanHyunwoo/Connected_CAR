@@ -21,11 +21,15 @@ public class SerialTest implements SerialPortEventListener {
 	private SerialPort serialPort;
 	private CommPortIdentifier portIdentifier;
 	private CommPort commPort;
-	private Client client;
+
+	private ClusterClient clusterClient;
+	private IVIClient iviClient;
 	
 	public SerialTest() {
-		client = new Client();
-		client.start();
+		clusterClient = new ClusterClient();
+		clusterClient.start();
+		iviClient = new IVIClient();
+		iviClient.start();
 	}
 
 	public SerialTest(String portName) throws NoSuchPortException {
@@ -154,7 +158,9 @@ public class SerialTest implements SerialPortEventListener {
 
 				String ss = new String(readBuffer);
 				System.out.println("Receive Low Data:" + ss + "||");
-				client.sendMsg("1,50");
+				iviClient.sendMsg(ss);
+				clusterClient.sendMsg(ss);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

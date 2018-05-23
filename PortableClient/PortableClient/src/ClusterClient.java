@@ -6,15 +6,13 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client extends Thread {
-
-	String TAG = "Client App ::: ";
+public class ClusterClient extends Thread {
+	String TAG = "ClusterClient ::: ";
+	
 	boolean cflag = true;
 	boolean flag = true;
-	String address = "192.168.0.39";
-	int port = 9999;
 	Socket socket;
-	public Client() {
+	public ClusterClient() {
 
 	}
 
@@ -22,11 +20,10 @@ public class Client extends Thread {
 
 	public void run() {
 		// 재접속을 위한 while
-
 		while (cflag) {
 			try {
 				System.out.println(TAG + "Try Connecting Server ..");
-				socket = new Socket(address, port);
+				socket = new Socket(Common.clusterIP, Common.port);
 				System.out.println(TAG + "Connected Server ..");
 				cflag = false;
 				break;
@@ -52,8 +49,7 @@ public class Client extends Thread {
 		sendMsg("1,10");
 		sendMsg("2,20");
 		sendMsg("3,0");
-		sendMsg("4,1");
-		
+		sendMsg("4,1");		
 	}
 
 	public void sendMsg(String msg) {
