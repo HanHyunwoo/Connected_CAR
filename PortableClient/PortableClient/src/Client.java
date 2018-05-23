@@ -52,7 +52,6 @@ public class Client extends Thread {
 	}
 
 	public void sendMsg(String msg) {
-
 		try {
 
 			Sender sender = new Sender(socket);
