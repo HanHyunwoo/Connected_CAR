@@ -49,6 +49,10 @@ public class Client extends Thread {
 			e.printStackTrace();
 		}
 		
+		sendMsg("1,10");
+		sendMsg("2,20");
+		sendMsg("3,0");
+		sendMsg("4,1");		
 	}
 
 	public void sendMsg(String msg) {
