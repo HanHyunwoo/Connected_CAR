@@ -4,8 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
@@ -157,15 +155,20 @@ public class SerialTest implements SerialPortEventListener {
 					int numBytes = bin.read(readBuffer);
 				}
 				
-				// :W28 00000000 0000000000000000 53 \r					
-				String buffer = new String(readBuffer);
+				String buffer = new String(readBuffer).trim();
+				System.out.println(buffer);
+				if(buffer.equals(Common.CANINITCODE)) {
+					System.out.println(TAG + "START CAN RECEIVER");
+					break;
+				}
+				
 				String header = buffer.substring(0, 4);
 				String id = buffer.substring(5, 12);
 				String data = buffer.substring(13, 13+16);
-				System.out.println("Receive Low Data:" + buffer + "||");
+				System.out.println("Receive Low Data:" + buffer);
+
 				iviClient.sendMsg(id+","+data);
-				clusterClient.sendMsg(id+","+data);
-				
+				clusterClient.sendMsg(id+","+data);			
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

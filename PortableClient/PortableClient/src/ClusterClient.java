@@ -8,10 +8,11 @@ import java.net.UnknownHostException;
 
 public class ClusterClient extends Thread {
 	String TAG = "ClusterClient ::: ";
-	
+
 	boolean cflag = true;
 	boolean flag = true;
 	Socket socket;
+
 	public ClusterClient() {
 
 	}
@@ -45,26 +46,27 @@ public class ClusterClient extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		sendMsg("1,10");
 		sendMsg("2,20");
 		sendMsg("3,0");
-		sendMsg("4,1");		
+		sendMsg("4,1");
 	}
 
 	public void sendMsg(String msg) {
 		try {
+			if (socket == null) {
+				System.out.println(TAG + " NOT Connected with Cluster");
+				return;
+			}
 
 			Sender sender = new Sender(socket);
 			sender.setSendMsg(msg);
 			new Thread(sender).start();
 
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
 		}
-
 	}
 
 	class Sender implements Runnable {
@@ -104,6 +106,7 @@ public class ClusterClient extends Thread {
 		Socket socket;
 		InputStream in;
 		DataInputStream din;
+
 		public Receiver(Socket socket) throws IOException {
 			this.socket = socket;
 			in = socket.getInputStream();

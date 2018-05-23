@@ -45,16 +45,15 @@ public class IVIClient extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		sendMsg("1,10");
-		sendMsg("2,20");
-		sendMsg("3,0");
-		sendMsg("4,1");		
+			
 	}
 
 	public void sendMsg(String msg) {
 		try {
-
+			if(socket == null) {
+				System.out.println(TAG + " NOT Connected with IVI");
+				return;
+			}
 			Sender sender = new Sender(socket);
 			sender.setSendMsg(msg);
 			new Thread(sender).start();
