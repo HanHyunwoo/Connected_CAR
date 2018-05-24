@@ -8,11 +8,10 @@ import java.net.UnknownHostException;
 
 public class IVIClient extends Thread {
 	String TAG = "IVIClient ::: ";
-	
+
 	private ConnectionManager connectionManager;
 	private Socket socket;
-	
-	boolean cflag = true;
+
 	boolean flag = true;
 
 	public IVIClient(ConnectionManager connectionManager) {
@@ -21,13 +20,11 @@ public class IVIClient extends Thread {
 
 	@Override
 	public void run() {
-		// ¿Á¡¢º”
-		while (cflag) {
+		while (true) {
 			try {
 				System.out.println(TAG + "Try Connecting Server ..");
 				socket = new Socket(Common.iviIP, Common.port);
 				System.out.println(TAG + "Connected Server ..");
-				cflag = false;
 				break;
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -47,25 +44,25 @@ public class IVIClient extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-			
+
 	}
 
-	public void sendMsg(String msg) {
+	public boolean sendMsg(String msg) {
 		try {
-			if(socket == null) {
+			if (socket == null) {
 				System.out.println(TAG + " NOT Connected with IVI");
-				return;
+				return false;
 			}
 			Sender sender = new Sender(socket);
 			sender.setSendMsg(msg);
 			new Thread(sender).start();
 
 		} catch (IOException e) {
-
 			e.printStackTrace();
-
+			return true;
 		}
-
+		
+		return true;
 	}
 
 	class Sender implements Runnable {
@@ -105,6 +102,7 @@ public class IVIClient extends Thread {
 		Socket socket;
 		InputStream in;
 		DataInputStream din;
+
 		public Receiver(Socket socket) throws IOException {
 			this.socket = socket;
 			in = socket.getInputStream();

@@ -1,3 +1,7 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
 import gnu.io.NoSuchPortException;
 
 public class ConnectionManager {
@@ -7,9 +11,32 @@ public class ConnectionManager {
 	IVIClient iviClient;
 
 	SerialConnection serialConnection;
+	Queue<msg> msgQue;
+	
+	public enum DES {CAR, CLUSTER, IVI};
 
+	private class msg{
+		DES des;
+		String msg;
+		
+		public msg(DES des, String msg) {
+			this.des = des;
+			this.msg = msg;			
+		}
+	}
+	
 	public ConnectionManager() {
-		// CAN 연결이 확인된 후 server에 접속  
+		msgQue = new LinkedList<>();
+		ConnectToCar();
+		
+		// CAN 연결이 확인된 후 server에 접속  		
+		clusterClient = new ClusterClient(this);
+		clusterClient.start();
+		iviClient = new IVIClient(this);
+		iviClient.start();
+	}
+	
+	public void ConnectToCar() {
 		while (true) {
 			try {
 				serialConnection = new SerialConnection(Common.CANPORT, this);
@@ -25,28 +52,56 @@ public class ConnectionManager {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	//CAN connected
+	public void SendStartSignal() {
+		clusterClient.sendMsg("0,1");
+		iviClient.sendMsg("0,1");
+	}
+	
+	//CAN disconnected
+	public void SendStopSignal() {
+		clusterClient.sendMsg("0,0");
+		iviClient.sendMsg("0,0");
 		
-		clusterClient = new ClusterClient(this);
-		clusterClient.start();
-		iviClient = new IVIClient(this);
-		iviClient.start();
+		clusterClient.stopClient();
+		iviClient.stopClient();
 	}
-
+	
 	public void SendToCluster(String msg) {
-		clusterClient.sendMsg(msg);
+		boolean res = clusterClient.sendMsg(msg);
+		if(!res) {
+			msgQue.add(new msg(DES.CLUSTER, msg));
+		}
 	}
 
-	public void SendToIVI(String msg) {
-		iviClient.sendMsg(msg);
+	public void SendToIVI(String msg) {		
+		boolean res = iviClient.sendMsg(msg);
+		if(!res) {
+			msgQue.add(new msg(DES.IVI, msg));
+		}
 	}
 
+	/*
+	 * device, value
+	 * motor : 5 / led : 6
+	 * value : 0 - 1
+	 * Change to CAN serial protocol 
+	 */
 	public void SendToCar(String msg) {
-		/*
-		 * device, value
-		 * motor : 5 , led : 6
-		 * value : 0 - 1
-		 * Change to CAN serial protocol 
-		*/
+		StringTokenizer st = new StringTokenizer(msg, ",");
+		String id = "";
+		String data = "";
+		
+		if(st.hasMoreTokens()) {
+			id = st.nextToken();
+		}		
+		if(st.hasMoreTokens()) {			
+			data = st.nextToken();	
+		}
+		
+		msg = String.format("W28%08d%016d",Integer.parseInt(id), Integer.parseInt(data));
 		serialConnection.sendMsg(msg);
 	}
 }

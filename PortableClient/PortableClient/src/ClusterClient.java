@@ -8,11 +8,10 @@ import java.net.UnknownHostException;
 
 public class ClusterClient extends Thread {
 	String TAG = "ClusterClient ::: ";
-	
+
 	private ConnectionManager connectionManager;
 	private Socket socket;
 
-	boolean cflag = true;
 	boolean flag = true;
 
 	public ClusterClient(ConnectionManager connectionManager) {
@@ -22,12 +21,11 @@ public class ClusterClient extends Thread {
 	@Override
 	public void run() {
 		// 재접속을 위한 while
-		while (cflag) {
+		while (true) {
 			try {
 				System.out.println(TAG + "Try Connecting Server ..");
 				socket = new Socket(Common.clusterIP, Common.port);
 				System.out.println(TAG + "Connected Server ..");
-				cflag = false;
 				break;
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -48,20 +46,22 @@ public class ClusterClient extends Thread {
 		}
 	}
 
-	public void sendMsg(String msg) {
+	public boolean sendMsg(String msg) {
 		try {
 			if (socket == null) {
 				System.out.println(TAG + " NOT Connected with Cluster");
-				return;
+				return false;
 			}
 
 			Sender sender = new Sender(socket);
 			sender.setSendMsg(msg);
 			new Thread(sender).start();
-
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
+		
+		return true;
 	}
 
 	class Sender implements Runnable {
@@ -122,7 +122,6 @@ public class ClusterClient extends Thread {
 					e.printStackTrace();
 				}
 			}
-
 		}
 	}
 
@@ -136,5 +135,4 @@ public class ClusterClient extends Thread {
 			e.printStackTrace();
 		}
 	}
-
 }

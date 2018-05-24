@@ -13,18 +13,21 @@ import gnu.io.SerialPortEventListener;
 
 public class SerialConnection implements SerialPortEventListener {
 	private static String TAG = "SerialConnection :: ";
+
+	private ConnectionManager connectionManager;
+
 	private BufferedInputStream bin;
 	private InputStream in;
 	private OutputStream out;
-	private SerialPort serialPort;
-	private CommPortIdentifier portIdentifier;
 	private CommPort commPort;
+	private CommPortIdentifier portIdentifier;
+	private SerialPort serialPort;
 
-	private ConnectionManager connectionManager;
-	
 	private int IDSTART = 4;
 	private int DATASTART = 12;
 	private int DATAEND = 28;
+	private int BUFFERLEN = 31;
+
 	public SerialConnection() {
 
 	}
@@ -66,16 +69,16 @@ public class SerialConnection implements SerialPortEventListener {
 		}
 	}
 
-	// 보내는 역할
 	public void sendMsg(String msg) {
 		SerialWriter sw = new SerialWriter(msg);
 		new Thread(sw).start();
 	}
-
+	
 	private class SerialWriter implements Runnable {
 		String data;
 
 		public SerialWriter() {
+			// CAN Connection start signal
 			this.data = ":G11A9\r";
 		}
 
@@ -96,6 +99,7 @@ public class SerialConnection implements SerialPortEventListener {
 			String returnData = ":";
 			returnData += serialData + Integer.toHexString(cdata).toUpperCase();
 			returnData += "\r";
+			System.out.println(TAG + " send :: " + returnData);
 			return returnData;
 		}
 
@@ -113,40 +117,86 @@ public class SerialConnection implements SerialPortEventListener {
 	public void serialEvent(SerialPortEvent event) {
 		switch (event.getEventType()) {
 		case SerialPortEvent.BI:
+			System.out.println(TAG + "BI");
+			break;
 		case SerialPortEvent.OE:
+			System.out.println(TAG + "OE");
+			break;
 		case SerialPortEvent.FE:
+			System.out.println(TAG + "FE");
+			break;
 		case SerialPortEvent.PE:
+			System.out.println(TAG + "PE");
+			break;
 		case SerialPortEvent.CD:
+			System.out.println(TAG + "CD");
+			break;
 		case SerialPortEvent.CTS:
+			System.out.println(TAG + "CTS");
+			break;
 		case SerialPortEvent.DSR:
+			System.out.println(TAG + "DSR");
+			break;
 		case SerialPortEvent.RI:
+			System.out.println(TAG + "RI");
+			break;
 		case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
+			System.out.println(TAG + "OUTPUT_BUFFER_EMPTY");
 			break;
 		case SerialPortEvent.DATA_AVAILABLE:
 			byte[] readBuffer = new byte[128];
 
 			try {
-				while (bin.available() > 0) {
-					int numBytes = bin.read(readBuffer);
+				int numBytes = 0;
+				if (bin.available() > 0) {
+					numBytes = bin.read(readBuffer);
+					System.out.println(numBytes);
 				}
 
 				String buffer = new String(readBuffer).trim();
-				System.out.println("Receive Low Data:" + buffer);
+				System.out.println("Receive Low Data:" + numBytes + " : " + buffer);
 
 				if (buffer.equals(Common.CANINITCODE)) {
+					connectionManager.SendStartSignal();
 					System.out.println(TAG + "START CAN RECEIVER");
 					break;
 				}
 
-				String id = buffer.substring(IDSTART, DATASTART-1);
+				if (numBytes < BUFFERLEN) {
+					System.out.println("It can not be send. " + numBytes + " : " + buffer);
+					break;
+				}
+
+				String id = buffer.substring(IDSTART, DATASTART);
 				String data = buffer.substring(DATASTART, DATAEND);
-				
+
 				connectionManager.SendToCluster(id + "," + data);
 				connectionManager.SendToIVI(id + "," + data);
+			} catch (IOException e) {
+				e.printStackTrace();
+				destroy();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			break;
+		}
+	}
+	
+	public void destroy() {
+		System.out.println(TAG + " dstroy . . .");
+		
+		serialPort.removeEventListener();
+		connectionManager.SendStopSignal();
+		
+		try {
+			bin.close();
+			in.close();
+			out.close();	
+			commPort.close();
+			serialPort.close();
+			connectionManager = null;			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
