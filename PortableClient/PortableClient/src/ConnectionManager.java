@@ -6,7 +6,7 @@ import gnu.io.NoSuchPortException;
 
 public class ConnectionManager {
 	private static String TAG = "ConnectionManager :: ";
-
+	private boolean status;
 	ClusterClient clusterClient;
 	IVIClient iviClient;
 
@@ -26,6 +26,7 @@ public class ConnectionManager {
 	}
 	
 	public ConnectionManager() {
+		status = true;
 		msgQue = new LinkedList<>();
 		ConnectToCar();
 		
@@ -36,6 +37,14 @@ public class ConnectionManager {
 		iviClient.start();
 	}
 	
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
 	public void ConnectToCar() {
 		while (true) {
 			try {
@@ -67,6 +76,7 @@ public class ConnectionManager {
 		
 		clusterClient.stopClient();
 		iviClient.stopClient();
+		status = false;
 	}
 	
 	public void SendToCluster(String msg) {
