@@ -6,6 +6,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
@@ -14,38 +21,94 @@ import org.apache.commons.net.ftp.FTPReply;
 
 public class FTPUploader {
 	FTPClient ftp = null;
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
+	static Date currentTime;
+	static String dTime;
+	static String filename;
+	static Calendar cal;
+	static String year, month, day;
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("Start");
-
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				int count = 0;
 				while (true) {
+					currentTime = new Date();
+					dTime = formatter.format(currentTime);
+					System.out.println("============================ [" + dTime
+							+ "]       FTP Connection Try      ===============");
 					FTPUploader ftpUploader = null;
 					try {
-						Thread.sleep(10000);
-						ftpUploader = new FTPUploader("70.12.114.146", "ozo", "1234");
-						ftpUploader.uploadFile("C:\\logs\\sensor.log", "sensor.log", "/home/ozo/");
-
+						ftpUploader = new FTPUploader("70.12.114.146", "root", "1234");
+						ftpUploader.uploadFile("C:\\logs\\sensor.log", "sensor.csv", "/root/sensorLog/");
+						ftpUploader.disconnect();
+						System.out.println("============================ [" + dTime + "] sensor.csv File Transfer Success ===============");
+						Thread.sleep(1000 * 6 * 5); // 5분
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					count++;
-					System.out.println(count + " : ftuUploader Success");
-					if (count >= 10) {
-						ftpUploader.disconnect();
-						break;
-					}
-
 				}
+
 			}
 		});
+
+		class DayScheduler {
+			public DayScheduler() {
+				Timer timer = new Timer(false);
+				Calendar calendar = Calendar.getInstance();
+				// 특정시간부터(미래) 시작하고자 할 경우 아래와같이 .set으로 설정, 안해도 무방함
+				calendar.set(2018, 4, 24, 01, 00, 0); // 년,월(0~11,즉 5월은 4),일,시,분,초 지정
+				timer.schedule(new MyTask(), new Date(calendar.getTimeInMillis()), 3600000); // 24 * 60 * 60 * 1000
+			}
+
+			class MyTask extends TimerTask {
+				public void run() {
+					currentTime = new Date();
+					dTime = formatter.format(currentTime);
+					cal = new GregorianCalendar();
+					cal.add(Calendar.DATE, -1); // 전날 날짜
+					year = cal.get(Calendar.YEAR) + "";
+					month = (cal.get(Calendar.MONTH) + 1) + "";
+					day = cal.get(Calendar.DAY_OF_MONTH) + "";
+
+					if (month.length() == 1) {
+						month = "0" + month;
+					}
+					if (day.length() == 1) {
+						day = "0" + day;
+					}
+
+					filename = "sensor.log." + year + "-" + month + "-" + day;
+
+					System.out.println("[ Daily ]============================ [" + dTime
+							+ "]       FTP Connection Try      ===============");
+
+					File f = new File("C:\\logs\\" + filename);
+					if (f.isFile()) {
+						System.out.println("[ " + filename + " ] File Found");
+					} else {
+						System.out.println("[ " + filename + " ] Not Found File");
+						return;
+					}
+
+					FTPUploader ftpUploader = null;
+					try {
+						ftpUploader = new FTPUploader("70.12.114.146", "root", "1234");
+						ftpUploader.uploadFile("C:\\logs\\" + filename, filename + ".csv", "/root/sensorLog/");
+						ftpUploader.disconnect();
+						System.out.println("[ Daily ]============================ [" + dTime + "] " + filename
+								+ " File Transfer Success ===============");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+
+		new DayScheduler();
+		Thread.sleep(1000);
 		t.start();
-		System.out.println("Done");
+
 	}
 
 	public FTPUploader(String host, String user, String pwd) throws Exception {
@@ -79,4 +142,5 @@ public class FTPUploader {
 			}
 		}
 	}
+
 }
