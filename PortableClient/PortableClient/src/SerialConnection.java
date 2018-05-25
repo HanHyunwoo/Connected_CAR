@@ -22,7 +22,9 @@ public class SerialConnection implements SerialPortEventListener {
 	private CommPort commPort;
 	private CommPortIdentifier portIdentifier;
 	private SerialPort serialPort;
-
+	
+	private String FROM = "W";
+	private int WHERE = 1;
 	private int IDSTART = 4;
 	private int DATASTART = 12;
 	private int DATAEND = 28;
@@ -107,6 +109,7 @@ public class SerialConnection implements SerialPortEventListener {
 			try {
 				byte[] inputData = data.getBytes();
 				out.write(inputData);
+				out.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -150,23 +153,27 @@ public class SerialConnection implements SerialPortEventListener {
 				int numBytes = 0;
 				if (bin.available() > 0) {
 					numBytes = bin.read(readBuffer);
-					System.out.println(numBytes);
 				}
 
-				String buffer = new String(readBuffer).trim();
+				String buffer = new String(readBuffer).trim();				
 				System.out.println("Receive Low Data:" + numBytes + " : " + buffer);
-
 				if (buffer.equals(Common.CANINITCODE)) {
 					connectionManager.SendStartSignal();
 					System.out.println(TAG + "START CAN RECEIVER");
 					break;
 				}
 
+				// message가 32 bit 보다 짧은 경우
 				if (numBytes < BUFFERLEN) {
 					System.out.println("It can not be send. " + numBytes + " : " + buffer);
 					break;
 				}
-
+				
+				// W : echo message
+				if(buffer.substring(WHERE, WHERE+1).equals(FROM)) {
+					break;
+				}
+				
 				String id = buffer.substring(IDSTART, DATASTART);
 				String data = buffer.substring(DATASTART, DATAEND);
 
@@ -178,6 +185,7 @@ public class SerialConnection implements SerialPortEventListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			
 			break;
 		}
 	}
