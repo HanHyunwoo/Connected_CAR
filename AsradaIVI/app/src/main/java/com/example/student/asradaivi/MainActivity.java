@@ -77,21 +77,25 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void ClickBTN(View v){
-        if(v.getId()==R.id.btn_home){
+        if(v.getId()==R.id.tv_home){
             rl_home.setVisibility(View.VISIBLE);
             ll_score.setVisibility(View.INVISIBLE);
             rl_energy.setVisibility(View.INVISIBLE);
             wv_search.setVisibility(View.INVISIBLE);
-        }else if(v.getId()==R.id.btn_energy){
-
-        }else if(v.getId()==R.id.btn_score){
+        }else if(v.getId()==R.id.tv_energy){
+            ll_score.setVisibility(View.INVISIBLE);
+            rl_energy.setVisibility(View.VISIBLE);
+            rl_home.setVisibility(View.INVISIBLE);
+            wv_search.setVisibility(View.INVISIBLE);
+            wv_hexa.loadUrl("http://70.12.114.143/Server/energy.do");
+        }else if(v.getId()==R.id.tv_score){
             ll_score.setVisibility(View.VISIBLE);
             rl_energy.setVisibility(View.INVISIBLE);
             rl_home.setVisibility(View.INVISIBLE);
             wv_search.setVisibility(View.INVISIBLE);
             wv_hexa.loadUrl("http://70.12.114.143/Server/hexa.do");
             //DO_Score();
-        }else if(v.getId()==R.id.btn_analysis){
+        }else if(v.getId()==R.id.tv_analysis){
 
         }else if(v.getId()==R.id.btn_search){
             String search = et_search.getText().toString();
@@ -101,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             rl_home.setVisibility(View.INVISIBLE);
             wv_search.loadUrl("https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query="+search);
         }
-
     }
 
     public void DO_Score(){
