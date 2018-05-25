@@ -33,19 +33,21 @@ public class MainController {
 		return "hexa3";
 	}
 
-	@RequestMapping("/hexaAdd.do")  //logApply
+	@RequestMapping("/logAdd.do")  //logApply
 	public String apply(HttpServletRequest res) {
+//http://70.12.114.143/Server/logAdd.do?CARID=1234&ACCEL=0&DECEL=1&SAFETYDIS=0&SNOOZE=0&SPEED=0&BATTERY=0&RPM=3
 //http://70.12.114.143/Server/hexaAdd.do?HEXSEQ=1&HEXSTART=0&HEXDECEL=1&HEXSTOP=0&HEXACCEL=0&HEXSAFETYDIS=0&HEXSNOOZE=0&CARID=123B
-		String HEXSEQ = res.getParameter("HEXSEQ");
-		String HEXSTART = res.getParameter("HEXSTART");
-		String HEXDECEL = res.getParameter("HEXDECEL");
-		String HEXSTOP = res.getParameter("HEXSTOP");
-		String HEXACCEL = res.getParameter("HEXACCEL");
-		String HEXSAFETYDIS = res.getParameter("HEXSAFETYDIS");
-		String HEXSNOOZE = res.getParameter("HEXSNOOZE");
+		
 		String CARID = res.getParameter("CARID");
-		System.out.println(HEXSEQ + "," + HEXSTART + "," + HEXDECEL +"," + HEXSTOP + "," + HEXACCEL + "," + HEXSAFETYDIS + "," + HEXSNOOZE + "," + CARID);
-		log.debug(HEXSEQ + "," + HEXSTART + "," + HEXDECEL +"," + HEXSTOP + "," + HEXACCEL + "," + HEXSAFETYDIS + "," + HEXSNOOZE + "," + CARID);
+		String ACCEL = res.getParameter("ACCEL");
+		String DECEL = res.getParameter("DECEL");
+		String SAFETYDIS = res.getParameter("SAFETYDIS");
+		String SNOOZE = res.getParameter("SNOOZE");
+		String SPEED = res.getParameter("SPEED");
+		String BATTERY = res.getParameter("BATTERY");
+		
+		System.out.println(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
+		log.debug(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
 		return "hexaAdd";
 	}
 	

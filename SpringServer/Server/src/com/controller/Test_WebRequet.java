@@ -19,7 +19,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
-public class FTPUploader {
+public class Test_WebRequet {
 	FTPClient ftp = null;
 	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
 	static Date currentTime;
@@ -37,9 +37,9 @@ public class FTPUploader {
 					dTime = formatter.format(currentTime);
 					System.out.println("============================ [" + dTime
 							+ "]       FTP Connection Try      ===============");
-					FTPUploader ftpUploader = null;
+					Test_WebRequet ftpUploader = null;
 					try {
-						ftpUploader = new FTPUploader("70.12.114.146", "root", "1234");
+						ftpUploader = new Test_WebRequet("70.12.114.146", "root", "1234");
 						ftpUploader.uploadFile("C:\\logs\\sensor.log", "sensor.csv", "/root/sensorLog/");
 						ftpUploader.disconnect();
 						System.out.println("============================ [" + dTime + "] sensor.csv File Transfer Success ===============");
@@ -57,7 +57,7 @@ public class FTPUploader {
 				Timer timer = new Timer(false);
 				Calendar calendar = Calendar.getInstance();
 				// 특정시간부터(미래) 시작하고자 할 경우 아래와같이 .set으로 설정, 안해도 무방함
-				calendar.set(2018, 4, 25, 11, 25, 0); // 년,월(0~11,즉 5월은 4),일,시,분,초 지정
+				calendar.set(2018, 4, 24, 01, 00, 0); // 년,월(0~11,즉 5월은 4),일,시,분,초 지정
 				timer.schedule(new MyTask(), new Date(calendar.getTimeInMillis()), 3600000); // 24 * 60 * 60 * 1000
 			}
 
@@ -91,9 +91,9 @@ public class FTPUploader {
 						return;
 					}
 
-					FTPUploader ftpUploader = null;
+					Test_WebRequet ftpUploader = null;
 					try {
-						ftpUploader = new FTPUploader("70.12.114.146", "root", "1234");
+						ftpUploader = new Test_WebRequet("70.12.114.146", "root", "1234");
 						ftpUploader.uploadFile("C:\\logs\\" + filename, filename + ".csv", "/root/sensorLog/");
 						ftpUploader.disconnect();
 						System.out.println("[ Daily ]============================ [" + dTime + "] " + filename
@@ -111,7 +111,7 @@ public class FTPUploader {
 
 	}
 
-	public FTPUploader(String host, String user, String pwd) throws Exception {
+	public Test_WebRequet(String host, String user, String pwd) throws Exception {
 		ftp = new FTPClient();
 		ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 		int reply;
