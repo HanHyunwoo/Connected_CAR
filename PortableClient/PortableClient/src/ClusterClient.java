@@ -21,7 +21,7 @@ public class ClusterClient extends Thread {
 	@Override
 	public void run() {
 		// 재접속을 위한 while
-		while (true) {
+		while (flag) {
 			try {
 				System.out.println(TAG + "Try Connecting Server ..");
 				socket = new Socket(Common.clusterIP, Common.port);
@@ -32,7 +32,7 @@ public class ClusterClient extends Thread {
 			} catch (IOException e) {
 				System.out.println(TAG + "Connected Retry ..");
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(Common.connectionRetry);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -51,6 +51,9 @@ public class ClusterClient extends Thread {
 			if (socket == null) {
 				System.out.println(TAG + " NOT Connected with Cluster");
 				return false;
+			} else if(socket.isClosed()) {
+				System.out.println(TAG + " Disconnected with Cluster");
+				connectionManager.ServerDisconnected();
 			}
 
 			Sender sender = new Sender(socket);
@@ -60,7 +63,7 @@ public class ClusterClient extends Thread {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -127,8 +130,8 @@ public class ClusterClient extends Thread {
 
 	public void stopClient() {
 		try {
-			Thread.sleep(1000);
 			flag = false;
+			Thread.sleep(1000);
 			if (socket != null)
 				socket.close();
 		} catch (Exception e) {
