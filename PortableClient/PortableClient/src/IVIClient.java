@@ -20,7 +20,7 @@ public class IVIClient extends Thread {
 
 	@Override
 	public void run() {
-		while (true) {
+		while (flag) {
 			try {
 				System.out.println(TAG + "Try Connecting Server ..");
 				socket = new Socket(Common.iviIP, Common.port);
@@ -31,7 +31,7 @@ public class IVIClient extends Thread {
 			} catch (IOException e) {
 				System.out.println(TAG + "Connected Retry ..");
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(Common.connectionRetry);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
@@ -61,7 +61,7 @@ public class IVIClient extends Thread {
 			e.printStackTrace();
 			return true;
 		}
-		
+
 		return true;
 	}
 
@@ -134,8 +134,8 @@ public class IVIClient extends Thread {
 
 	public void stopClient() {
 		try {
-			Thread.sleep(1000);
 			flag = false;
+			Thread.sleep(1000);
 			if (socket != null)
 				socket.close();
 		} catch (Exception e) {

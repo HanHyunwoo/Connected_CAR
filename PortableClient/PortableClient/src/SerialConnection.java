@@ -22,7 +22,9 @@ public class SerialConnection implements SerialPortEventListener {
 	private CommPort commPort;
 	private CommPortIdentifier portIdentifier;
 	private SerialPort serialPort;
-	
+
+	private boolean flag = true;
+
 	private String FROM = "W";
 	private int WHERE = 1;
 	private int IDSTART = 4;
@@ -34,18 +36,14 @@ public class SerialConnection implements SerialPortEventListener {
 
 	}
 
-	public SerialConnection(String portName, ConnectionManager connectionManager) throws NoSuchPortException {
+	public SerialConnection(String portName, ConnectionManager connectionManager) throws Exception {
 		this.connectionManager = connectionManager;
 		this.portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 
-		try {
-			connectSerial();
-			System.out.println(TAG + portName + " PORT connected");
-			(new Thread(new SerialWriter())).start();
-		} catch (Exception e) {
-			System.out.println(TAG + "connect Fail");
-			e.printStackTrace();
-		}
+		connectSerial();
+		System.out.println(TAG + portName + " PORT connected");
+		(new Thread(new SerialWriter())).start();
+
 	}
 
 	public void connectSerial() throws Exception {
@@ -75,7 +73,7 @@ public class SerialConnection implements SerialPortEventListener {
 		SerialWriter sw = new SerialWriter(msg);
 		new Thread(sw).start();
 	}
-	
+
 	private class SerialWriter implements Runnable {
 		String data;
 
@@ -151,11 +149,11 @@ public class SerialConnection implements SerialPortEventListener {
 
 			try {
 				int numBytes = 0;
-				if (bin.available() > 0) {
+				if (flag == true && bin.available() > 0) {
 					numBytes = bin.read(readBuffer);
 				}
 
-				String buffer = new String(readBuffer).trim();				
+				String buffer = new String(readBuffer).trim();
 				System.out.println("Receive Low Data:" + numBytes + " : " + buffer);
 				if (buffer.equals(Common.CANINITCODE)) {
 					connectionManager.SendStartSignal();
@@ -168,12 +166,12 @@ public class SerialConnection implements SerialPortEventListener {
 					System.out.println("It can not be send. " + numBytes + " : " + buffer);
 					break;
 				}
-				
+
 				// W : echo message
-				if(buffer.substring(WHERE, WHERE+1).equals(FROM)) {
+				if (buffer.substring(WHERE, WHERE + 1).equals(FROM)) {
 					break;
 				}
-				
+
 				String id = buffer.substring(IDSTART, DATASTART);
 				String data = buffer.substring(DATASTART, DATAEND);
 
@@ -185,24 +183,33 @@ public class SerialConnection implements SerialPortEventListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			break;
 		}
 	}
-	
+
 	public void destroy() {
 		System.out.println(TAG + " dstroy . . .");
-		
+
+		flag = false;
+
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+
 		serialPort.removeEventListener();
 		connectionManager.SendStopSignal();
-		
+
 		try {
 			bin.close();
 			in.close();
-			out.close();	
+			out.close();
 			commPort.close();
 			serialPort.close();
-			connectionManager = null;			
+			connectionManager = null;
+			System.out.println(TAG + " dstroy complete! ");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
