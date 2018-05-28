@@ -43,7 +43,7 @@ public class FTPUploader {
 						ftpUploader.uploadFile("C:\\logs\\sensor.log", "sensor.csv", "/root/sensorLog/");
 						ftpUploader.disconnect();
 						System.out.println("============================ [" + dTime + "] sensor.csv File Transfer Success ===============");
-						Thread.sleep(1000 * 6 * 5); // 5Ка
+						Thread.sleep(1000 * 60 * 5); // 5Ка
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
