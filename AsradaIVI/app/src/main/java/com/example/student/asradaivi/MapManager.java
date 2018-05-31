@@ -1,11 +1,14 @@
 package com.example.student.asradaivi;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,6 +47,12 @@ public class MapManager {
             return;
         }
 
+        if (carSimulation.getDistance() < ApplicationData.updateDistance) {
+            m.moveMap(carSimulation.getLatLng());
+            return;
+        }
+
+        carSimulation.setLatLngLasttoCur();
         m.updateMap(carSimulation.getLatLng());
 
         Log.d(TAG, "carLocationChanged");
@@ -52,9 +61,8 @@ public class MapManager {
 
         //Request URL
         try {
-
             JSONParser jsonParser = new JSONParser();
-            int radius = 20000;
+            int radius = 1000;
             String type = "parking";
             String language = "ko";
             String params = "location=" + latLng.latitude + "," + latLng.longitude
@@ -64,15 +72,16 @@ public class MapManager {
                     + "&key="
                     + ApplicationData.location_key;
 
-            // LocationChanged!!!
-            startAnimation();
-
             // Request URL
             jsonParser.makeHttpRequest(this, ApplicationData.location_url, params, "POST");
-
         } catch (Exception e) {
+            requestComplete();
             e.printStackTrace();
         }
+    }
+
+    public void requestComplete() {
+        m.updateCompleteMap();
     }
 
     public void startAnimation() {
@@ -117,14 +126,62 @@ public class MapManager {
                         , jo.getString("vicinity")
                         , price_level
                 ));
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
-/*    public void updateMap(GoogleMap mMap) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLng( carSimulation.getLatLng()));
-        mapController.updateMap(mMap, carSimulation.getLatLng());
-    }*/
+    public LatLng getLatLng() {
+        return carSimulation.getLatLng();
+    }
+
+    public void carMarkerManagement(final Marker marker) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                m.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        marker.setAlpha(0.6f);
+                    }
+                });
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                m.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        marker.setAlpha(0.3f);
+                    }
+                });
+
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                m.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        marker.remove();
+                    }
+                });
+
+            }
+        }).start();
+    }
 }

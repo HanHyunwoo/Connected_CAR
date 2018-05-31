@@ -2,56 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:id="@+id/ll_menu"
+
+    <TextView
+        android:id="@+id/tv_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:onClick="ClickBTN"
+        android:text="HOME" />
 
-        <TextView
-            android:id="@+id/tv_home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="ClickBTN"
-            android:text="HOME" />
+    <TextView
+        android:id="@+id/tv_energy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:onClick="ClickBTN"
+        android:text="ENERGY" />
 
-        <TextView
-            android:id="@+id/tv_energy"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="ClickBTN"
-            android:text="ENERGY" />
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:onClick="ClickBTN"
+        android:text="SCORE" />
 
-        <TextView
-            android:id="@+id/tv_score"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="ClickBTN"
-            android:text="SCORE" />
-
-        <TextView
-            android:id="@+id/tv_analysis"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:onClick="ClickBTN"
-            android:text="ANALYSIS" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@android:dimen/thumbnail_height"
-            android:orientation="vertical">
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_analysis"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:onClick="ClickBTN"
+        android:text="ANALYSIS" />
 
 </LinearLayout>

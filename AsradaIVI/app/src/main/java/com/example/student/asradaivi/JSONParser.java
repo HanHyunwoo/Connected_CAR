@@ -23,7 +23,6 @@ public class JSONParser {
     StringBuilder stringBuilder;
     URL urlObj;
     JSONObject jsonObject = null;
-    String paramsString;
 
     class postRequestThread extends Thread {
         String url;
@@ -88,6 +87,8 @@ public class JSONParser {
                     Log.d(TAG, e.getMessage());
                 }
             }
+
+            mapManager.requestComplete();
         }
     }
 

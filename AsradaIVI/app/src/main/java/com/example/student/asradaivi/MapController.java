@@ -16,10 +16,6 @@ public class MapController {
         Log.d(TAG, "Construct");
         this.mMap = mMap;
         this.mapManager = mapManager;
-
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
 /*    public void addMarker(Parking parking) {

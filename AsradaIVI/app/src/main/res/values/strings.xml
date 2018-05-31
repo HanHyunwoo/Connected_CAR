@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AsradaIVI</string>
     <string name="google_maps_key">AIzaSyDSO5BH4HcdeWteRf51zb3_VTCjxHtrRoA</string>
+
     <string name="google_location_key">AIzaSyBQGIphvDopltnTeZDCLQP5E5H5smwFn2M</string>
     <string name="location_url">https://maps.googleapis.com/maps/api/place/nearbysearch/json?</string>
 </resources>
