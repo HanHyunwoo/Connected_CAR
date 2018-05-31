@@ -4,4 +4,5 @@
 
     <string name="google_location_key">AIzaSyBQGIphvDopltnTeZDCLQP5E5H5smwFn2M</string>
     <string name="location_url">https://maps.googleapis.com/maps/api/place/nearbysearch/json?</string>
+    <string name="search_hint">오늘은 어디로 갈까요?</string>
 </resources>

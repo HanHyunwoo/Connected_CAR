@@ -39,34 +39,30 @@ public class MapManager {
         carSimulation.setFlagView(mapView);
     }
 
-    // Add parkingLot Marker
-
-    //
-    public void carLocationChanged() {
+    public void carLocationChanged(boolean moveflag) {
         if (!mapView) {
             return;
         }
 
         if (carSimulation.getDistance() < ApplicationData.updateDistance) {
-            m.moveMap(carSimulation.getLatLng());
+            if(moveflag)
+                m.moveMap(carSimulation.getLatLng());
+            else
+                m.addCurrentLoc(carSimulation.getLatLng());
             return;
         }
 
         carSimulation.setLatLngLasttoCur();
-        m.updateMap(carSimulation.getLatLng());
-
         Log.d(TAG, "carLocationChanged");
+
         LatLng latLng = carSimulation.getLatLng();
-
-
         //Request URL
         try {
             JSONParser jsonParser = new JSONParser();
-            int radius = 1000;
             String type = "parking";
             String language = "ko";
             String params = "location=" + latLng.latitude + "," + latLng.longitude
-                    + "&radius=" + radius
+                    + "&radius=" + ApplicationData.locationRadius
                     + "&type=" + type
                     + "&language=" + language
                     + "&key="
@@ -74,6 +70,8 @@ public class MapManager {
 
             // Request URL
             jsonParser.makeHttpRequest(this, ApplicationData.location_url, params, "POST");
+
+            m.updateMap(carSimulation.getLatLng());
         } catch (Exception e) {
             requestComplete();
             e.printStackTrace();
@@ -81,7 +79,17 @@ public class MapManager {
     }
 
     public void requestComplete() {
-        m.updateCompleteMap();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                m.updateCompleteMap();
+            }
+        }).start();
     }
 
     public void startAnimation() {

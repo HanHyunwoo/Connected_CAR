@@ -8,13 +8,16 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRadar;
-import com.arsy.maps_library.MapRipple;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapText;
+import com.beardedhen.androidbootstrap.font.MaterialIcons;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,19 +32,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_HEART;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = String.format("%20s", "MainActivity :: ");
-
-    LinearLayout ll_menu, ll_score, ll_map;
+    private final int MENU_HOME = 0;
+    private final int MENU_ENERGY = 1;
+    private final int MENU_SCORE = 2;
+    private final int MENU_ANALYSIS = 3;
+    LinearLayout ll_menu, ll_score, ll_map, ll_home;
     TextView tv_time;
+    TextView[] menu = new TextView[4];
     Date dt;
     SimpleDateFormat time;
-    EditText et_search;
     WebView wv_search, wv_hexa;
-    RelativeLayout rl_home, rl_energy;
+    RelativeLayout rl_energy;
     GoogleMap mMap;
-
+    BootstrapButton btn_led, btn_wiper;
     MapManager mapManager;
     private MapRadar mapRadar;
 
@@ -54,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        menu[0] = findViewById(R.id.tv_home);
+        menu[1] = findViewById(R.id.tv_energy);
+        menu[2] = findViewById(R.id.tv_score);
+        menu[3] = findViewById(R.id.tv_analysis);
+
         wv_search = findViewById(R.id.wv_search);
         wv_hexa = findViewById(R.id.wv_hexa);
         wv_search.setWebViewClient(new WebViewClient());
@@ -62,10 +75,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         webSettings1.setJavaScriptEnabled(true);
         WebSettings webSettings2 = wv_hexa.getSettings();
         webSettings2.setJavaScriptEnabled(true);
-        wv_search.setVisibility(View.INVISIBLE);
+        wv_search.loadUrl("https://www.google.com/");
 
-        rl_home = findViewById(R.id.rl_home);
-        rl_home.setVisibility(View.VISIBLE);
+        ll_home = findViewById(R.id.ll_home);
+        ll_home.setVisibility(View.VISIBLE);
+        changeMenuColor(MENU_HOME);
+
         rl_energy = findViewById(R.id.rl_energy);
         rl_energy.setVisibility(View.INVISIBLE);
 
@@ -76,8 +91,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ll_map.setVisibility(View.INVISIBLE);
 
         tv_time = findViewById(R.id.tv_time);
-        et_search = findViewById(R.id.et_search);
-        time = new SimpleDateFormat("yyyy-MM-dd, hh:mm:ss a");
+        time = new SimpleDateFormat("yyyy년MM월dd일 hh:mm:ss a");
+
+        btn_led = findViewById(R.id.btn_led);
+        btn_led.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+            @Override
+            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
+                if (isChecked) {
+                    bootstrapButton.setText("LED OFF");
+                } else {
+                    bootstrapButton.setText("LED ON");
+                }
+            }
+        });
+
+        btn_wiper = findViewById(R.id.btn_wiper);
+        btn_wiper.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+            @Override
+            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
+                if (isChecked) {
+                    bootstrapButton.setText("Wiper 작동 중");
+                } else {
+                    bootstrapButton.setText("Wiper 작동 중지");
+                }
+            }
+        });
+
         new Thread(r).start();
     }
 
@@ -100,56 +139,70 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
+    public void changeMenuColor(int index) {
+        for (int i = 0; i < menu.length; i++) {
+            if (i == index) {
+                menu[i].setBackgroundResource(R.color.colorAccent);
+                menu[i].setTextColor(getResources().getColor(android.R.color.background_light));
+            } else {
+                menu[i].setBackgroundResource(android.R.color.background_light);
+                menu[i].setTextColor(getResources().getColor(R.color.colorAccent));
+            }
+        }
+    }
+
     public void ClickBTN(View v) {
         if (v.getId() == R.id.tv_home) {
+            changeMenuColor(MENU_HOME);
             mapManager.setMapView(false);
-            rl_home.setVisibility(View.VISIBLE);
+            ll_home.setVisibility(View.VISIBLE);
             ll_score.setVisibility(View.INVISIBLE);
             rl_energy.setVisibility(View.INVISIBLE);
-            wv_search.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
         } else if (v.getId() == R.id.tv_energy) {
+            changeMenuColor(MENU_ENERGY);
             mapManager.setMapView(false);
             ll_score.setVisibility(View.INVISIBLE);
             rl_energy.setVisibility(View.VISIBLE);
-            rl_home.setVisibility(View.INVISIBLE);
-            wv_search.setVisibility(View.INVISIBLE);
+            ll_home.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
-            wv_hexa.loadUrl("http://70.12.114.143/Server/energy.do");
+            wv_hexa.loadUrl("http://70.12.114.144/Server/energy.do");
         } else if (v.getId() == R.id.tv_score) {
+            changeMenuColor(MENU_SCORE);
             mapManager.setMapView(false);
             ll_score.setVisibility(View.VISIBLE);
             rl_energy.setVisibility(View.INVISIBLE);
-            rl_home.setVisibility(View.INVISIBLE);
-            wv_search.setVisibility(View.INVISIBLE);
+            ll_home.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
-            wv_hexa.loadUrl("http://70.12.114.143/Server/hexa.do");
+            wv_hexa.loadUrl("http://70.12.114.144/dash/charts/hexaChart.jsp");
             //DO_Score();
         } else if (v.getId() == R.id.tv_analysis) {
-            if (mapManager != null)
-                mapManager.setMapView(true);
+            changeMenuColor(MENU_ANALYSIS);
+
             ll_map.setVisibility(View.VISIBLE);
-            rl_home.setVisibility(View.INVISIBLE);
+            ll_home.setVisibility(View.INVISIBLE);
             ll_score.setVisibility(View.INVISIBLE);
             rl_energy.setVisibility(View.INVISIBLE);
-            wv_search.setVisibility(View.INVISIBLE);
             initializeMap(mMap);
-        } else if (v.getId() == R.id.btn_search) {
-            mapManager.setMapView(false);
-            String search = et_search.getText().toString();
-            wv_search.setVisibility(View.VISIBLE);
-            rl_energy.setVisibility(View.INVISIBLE);
-            rl_home.setVisibility(View.INVISIBLE);
-            wv_search.loadUrl("https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=" + search);
+            if (mapManager != null)
+                mapManager.setMapView(true);
         }
     }
 
     public void ClickSensorBTN(View v) {
-        /*if (v.getId() == R.id.) {
-
-        } else if (v.getId() == R.id.switch1) {
-
-        }*/
+        Log.d("TAG", "더eoeoeo댓");
+        if (v.getId() == btn_led.getId()) {
+            Log.d("TAG", "더ㅔㅅ");
+            if (btn_led.isSelected())
+                btn_led.setText("off");
+            else
+                btn_led.setText("on");
+        } else if (v.getId() == R.id.btn_wiper) {
+            if (btn_wiper.isSelected())
+                btn_wiper.setText("off");
+            else
+                btn_wiper.setText("on");
+        }
     }
 
     public void DO_Score() {
@@ -177,8 +230,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapManager = new MapManager(this, googleMap);
     }
 
-    public void moveMap(final LatLng latLng) {
-        Log.d(TAG, "updateMap " + latLng.latitude + ", " + latLng.longitude);
+    public void addCurrentLoc(final LatLng latLng) {
+        Log.d(TAG, "addCurrentLoc ");
 
         runOnUiThread(new Runnable() {
             @Override
@@ -188,6 +241,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .title("현재위치")
                         .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.state)));
                 mapManager.carMarkerManagement(marker);
+            }
+        });
+    }
+
+    public void moveMap(final LatLng latLng) {
+        Log.d(TAG, "updateMap " + latLng.latitude + ", " + latLng.longitude);
+        addCurrentLoc(latLng);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17));
             }
         });
@@ -199,8 +263,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mapRadar == null || !mapRadar.isAnimationRunning()) {
             mapRadar = new MapRadar(mMap, latLng, this);
             //mapRadar.withClockWiseAnticlockwise(true);
-            mapRadar.withDistance(500);
-            mapRadar.withClockwiseAnticlockwiseDuration(1);
+            mapRadar.withDistance(300);
+            mapRadar.withClockwiseAnticlockwiseDuration(2);
             mapRadar.withRadarColors(Color.parseColor("#FFA3D2E4"), 0x00fccd29);  //starts from transparent to fuly black
             mapRadar.withOuterCircleTransparency(0.5f);
             mapRadar.withRadarTransparency(0.5f);
@@ -219,11 +283,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void updateCompleteMap() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -252,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .snippet(parking.getVicinity())
                             .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.paidparking)));
                 }
-
             }
         });
     }

@@ -39,6 +39,7 @@ public class CarSimulation extends Thread {
 
     @Override
     public void run() {
+        int a = 0;
         while (flag) {
             if (flagView) {
                 int d = rand.nextInt(4);
@@ -50,11 +51,17 @@ public class CarSimulation extends Thread {
                                 + (dir[d][1]) * Math.round(rand.nextDouble() * 100d) / 300000d);
 
                 // Location Changed !
-                mapManager.carLocationChanged();
+                if(a > 2) {
+                    mapManager.carLocationChanged(true);
+                    a = 0;
+                }
+                else {
+                    mapManager.carLocationChanged(false);
+                }
             }
-
             try {
                 Thread.sleep(1000);
+                a++;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
