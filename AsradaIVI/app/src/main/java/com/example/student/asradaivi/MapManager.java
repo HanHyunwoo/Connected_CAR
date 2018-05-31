@@ -44,7 +44,6 @@ public class MapManager {
             return;
         }
 
-
         m.updateMap(carSimulation.getLatLng());
 
         Log.d(TAG, "carLocationChanged");
@@ -55,7 +54,7 @@ public class MapManager {
         try {
 
             JSONParser jsonParser = new JSONParser();
-            int radius = 3000;
+            int radius = 20000;
             String type = "parking";
             String language = "ko";
             String params = "location=" + latLng.latitude + "," + latLng.longitude
@@ -88,12 +87,20 @@ public class MapManager {
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jo = null;
             String openNow = "";
+            String price_level = "";
+
             try {
                 jo = jsonArray.getJSONObject(i);
                 JSONObject open = jo.getJSONObject("opening_hours");
                 openNow = open.getString("open_now");
             } catch (JSONException e) {
-                Log.d(TAG, "exception" + e.toString());
+                Log.d(TAG, "exception" + e.getMessage());
+            }
+
+            try {
+                price_level = jo.getString("price_level");
+            } catch (JSONException e) {
+                Log.d(TAG, "exception" + e.getMessage());
             }
 
             try {
@@ -101,22 +108,23 @@ public class MapManager {
                 geo = geo.getJSONObject("location");
                 LatLng latLng = new LatLng(geo.getDouble("lat"), geo.getDouble("lng"));
 
-                mapController.addMarker(new Parking(
+                m.addMarker(new Parking(
                         latLng, jo.getString("icon")
                         , jo.getString("id")
                         , jo.getString("name")
                         , openNow
                         , jo.getString("place_id")
-                        , jo.getString("vicinity"))
-                );
+                        , jo.getString("vicinity")
+                        , price_level
+                ));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void updateMap(GoogleMap mMap) {
+/*    public void updateMap(GoogleMap mMap) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng( carSimulation.getLatLng()));
         mapController.updateMap(mMap, carSimulation.getLatLng());
-    }
+    }*/
 }

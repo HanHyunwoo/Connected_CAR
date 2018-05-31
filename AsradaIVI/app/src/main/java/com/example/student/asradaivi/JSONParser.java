@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Map;
 
 public class JSONParser {
-    String TAG = "JSONParser";
+    String TAG = "JSONParser  :: ";
     String charset = "UTF-8";
     DataOutputStream dataOutputStream;
     StringBuilder stringBuilder;
@@ -73,14 +73,19 @@ public class JSONParser {
                         break;
                     }
 
-
                     mapManager.addMarkers(jo.getJSONArray("results"));
 
                     /* Check next token */
                     params = "pagetoken=" + jo.getString("next_page_token");
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, e.getMessage());
                     break;
+                }
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.d(TAG, e.getMessage());
                 }
             }
         }
@@ -131,16 +136,16 @@ public class JSONParser {
             while ((line = reader.readLine()) != null) {
                 stringBuilder.append(line);
             }
-            Log.d("JSON Parser", "Result: " + stringBuilder.toString());
+            Log.d(TAG, "Result: " + stringBuilder.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Error parsing data " + e.getMessage());
         }
         httpURLConnection.disconnect();
 
         try {
             jsonObject = new JSONObject(stringBuilder.toString());
         } catch (JSONException e) {
-            Log.e("JSON Parser", "Error parsing data " + e.toString());
+            Log.e(TAG, "Error parsing data " + e.getMessage());
         }
 
         return jsonObject;

@@ -40,9 +40,9 @@ public class CarSimulation extends Thread {
                 Log.d(TAG, " "+d);
 
                 latLng = new LatLng(latLng.latitude
-                        + (dir[d][0]) * (Math.round(rand.nextDouble() * 100d) / 100d),
+                        + (dir[d][0]) * (Math.round(rand.nextDouble() * 100d) / 1000d),
                         latLng.longitude
-                                + (dir[d][1]) * Math.round(rand.nextDouble() * 100d) / 100d);
+                                + (dir[d][1]) * Math.round(rand.nextDouble() * 100d) / 1000d);
 
                 // Location Changed !
                 mapManager.carLocationChanged();

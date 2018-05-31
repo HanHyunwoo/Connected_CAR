@@ -19,11 +19,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = String.format("%20s", "MainActivity :: ");
@@ -162,16 +164,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void updateMap(final LatLng latLng) {
-        new Thread(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                runOnUiThread(new Runnable() {
-
-                    public void run() {
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,14));
-                    }
-                });
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,13));
             }
-        }).start();
+        });
+    }
+
+    HashMap<String, Parking> parkingmap = new HashMap<>();
+
+    public void addMarker(final Parking parking) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(parking.getPrice().equals("")) {
+                    com.google.android.gms.maps.model.Marker melbourne = mMap.addMarker(new MarkerOptions()
+                            .position(parking.getLatLng())
+                            .title(parking.getName())
+                            .snippet(parking.getVicinity())
+                            .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.parking)));
+                } else {
+                    com.google.android.gms.maps.model.Marker melbourne = mMap.addMarker(new MarkerOptions()
+                            .position(parking.getLatLng())
+                            .title(parking.getName())
+                            .snippet(parking.getVicinity())
+                            .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.paidparking)));
+                }
+
+            }
+        });
     }
 }

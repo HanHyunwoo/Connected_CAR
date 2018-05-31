@@ -22,13 +22,16 @@ public class MapController {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
-    public void addMarker(Parking parking) {
-        //mMap.setOnMarkerClickListener();
+/*    public void addMarker(Parking parking) {
+        com.google.android.gms.maps.model.Marker melbourne = mMap.addMarker(new MarkerOptions()
+                .position(parking.getLatLng())
+                .title(parking.getName())
+                            .snippet(parking.getVicinity())
+                .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.parking)));
         Log.d(TAG, parking.toString());
     }
 
     public void updateMap(GoogleMap mMap, LatLng latLng) {
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-
-    }
+    }*/
 }
