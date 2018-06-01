@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MENU_SCORE = 1;
     private final int MENU_ANALYSIS = 2;
     Server server;
-    LinearLayout ll_menu, ll_score, ll_map, ll_home;
+    LinearLayout ll_menu, ll_call, ll_map, ll_home;
     TextView tv_time;
     TextView[] menu = new TextView[3];
     Date dt;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     CircleButton btn_snooze;
     MapManager mapManager;
     private MapRadar mapRadar;
+    ContactAdapter contactAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,8 +94,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ll_home.setVisibility(View.VISIBLE);
         changeMenuColor(MENU_HOME);
 
-        ll_score = findViewById(R.id.ll_score);
-        ll_score.setVisibility(View.INVISIBLE);
+        ll_call = findViewById(R.id.ll_call);
+        ll_call.setVisibility(View.VISIBLE);
+
+        // List View setting
+        LinearLayout container =  findViewById(R.id.container_h);
+        contactAdapter = new ContactAdapter(this, container);
+
+        ListView listView = findViewById(R.id.contactlist);
+        listView.setAdapter(contactAdapter);
 
         ll_map = findViewById(R.id.ll_map);
         ll_map.setVisibility(View.INVISIBLE);
@@ -169,19 +178,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             changeMenuColor(MENU_HOME);
             mapManager.setMapView(false);
             ll_home.setVisibility(View.VISIBLE);
-            ll_score.setVisibility(View.INVISIBLE);
+            ll_call.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
         }  else if (v.getId() == R.id.tv_score) {
+            contactAdapter.initContacts();
             changeMenuColor(MENU_SCORE);
             mapManager.setMapView(false);
-            ll_score.setVisibility(View.VISIBLE);
+            ll_call.setVisibility(View.VISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
         } else if (v.getId() == R.id.tv_analysis) {
             changeMenuColor(MENU_ANALYSIS);
             ll_map.setVisibility(View.VISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
-            ll_score.setVisibility(View.INVISIBLE);
+            ll_call.setVisibility(View.INVISIBLE);
             initializeMap(mMap);
             if (mapManager != null)
                 mapManager.setMapView(true);
@@ -292,6 +302,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.getUiSettings().setAllGesturesEnabled(true);
         }
     }
-
-
 }

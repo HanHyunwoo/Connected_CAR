@@ -33,6 +33,19 @@
             android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/ll_call"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
+
+                <ListView
+                    android:id="@+id/contactlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/ll_home"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -42,22 +55,6 @@
                     layout="@layout/home_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_score"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <WebView
-                    android:id="@+id/wv_hexa"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                </WebView>
-
             </LinearLayout>
 
             <LinearLayout
