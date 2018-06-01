@@ -1,21 +1,19 @@
 {
-    "title": "SB Admin",
-    "name": "startbootstrap-sb-admin",
-    "version": "4.0.0",
-    "description": "A one page app landing page HTML theme for Bootstrap.",
+    "title": "Landing Page",
+    "name": "startbootstrap-landing-page",
+    "version": "4.1.1",
+    "description": "An HTML landing page template built with Bootstrap",
     "keywords": [
         "css",
         "sass",
         "html",
         "responsive",
         "theme",
-        "template",
-        "admin",
-        "app"
+        "template"
     ],
-    "homepage": "https://startbootstrap.com/template-overviews/sb-admin",
+    "homepage": "https://startbootstrap.com/template-overviews/landing-page",
     "bugs": {
-        "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin/issues",
+        "url": "https://github.com/BlackrockDigital/startbootstrap-landing-page/issues",
         "email": "feedback@startbootstrap.com"
     },
     "license": "MIT",
@@ -25,25 +23,20 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/BlackrockDigital/startbootstrap-sb-admin.git"
+        "url": "https://github.com/BlackrockDigital/startbootstrap-landing-page.git"
     },
     "dependencies": {
-        "bootstrap": "4.0.0",
-        "chart.js": "2.7.1",
-        "datatables.net-bs4": "1.10.16",
+        "bootstrap": "4.1.1",
         "font-awesome": "4.7.0",
         "jquery": "3.3.1",
-        "jquery.easing": "^1.4.1"
+        "simple-line-icons": "^2.4.1"
     },
     "devDependencies": {
-        "browser-sync": "2.23.6",
+        "browser-sync": "2.24.3",
         "gulp": "^3.9.1",
-        "gulp-clean-css": "3.9.2",
-        "gulp-header": "2.0.1",
-        "gulp-html-beautify": "^1.0.1",
-        "gulp-pug": "^3.3.0",
+        "gulp-clean-css": "3.9.4",
+        "gulp-header": "2.0.5",
         "gulp-rename": "^1.2.2",
-        "gulp-sass": "^3.1.0",
-        "gulp-uglify": "3.0.0"
+        "gulp-sass": "4.0.1"
     }
 }

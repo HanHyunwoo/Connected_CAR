@@ -13,11 +13,12 @@ PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
 		<!-- insert into Analyzed values
 		(#{CarId},#{DateStart},#{DateEnd},${Burst},${Deceleration},${QuickStart},${SuddenStop},${SafetyDis},${Snooze},${Battery}) -->
 	</insert>
-<!-- 
-	<insert id="insertAll" parameterType="java.util.List">
-	<foreach collection="list" item="item" separator="; ">
-	insert into Analyzed values (#{item.CarId},TO_DATE(#{item.DateStart},'yyyy-mm-dd hh24:mi:ss'),TO_DATE(#{item.DateEnd},'yyyy-mm-dd hh24:mi:ss'),#{item.Burst},#{item.Deceleration},#{item.QuickStart},#{item.SuddenStop},#{item.SafetyDis},#{item.Snooze},#{item.Battery})
-	</foreach>
-	</insert>
- -->
+	
+	<select id="selectId" parameterType="string" resultType="analyzed">
+		SELECT * FROM ANALYZED WHERE CarId = #{obj}
+	</select>
+	
+	<select id="selectCnt" parameterType="string" resultType="java.util.HashMap">
+		SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.analyzed;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,15 +14,21 @@ import com.vo.Analyzed;
 
 
 @Service("analyzedBiz")
-public class AnalyzedBiz implements Biz<Analyzed> {
+public class AnalyzedBiz implements Biz<Analyzed, String, Integer> {
 
 	@Resource(name="analyzedDao")
-	Dao<Analyzed> dao;
+	Dao<Analyzed, String, Integer> dao;
 	
 	@Transactional
 	@Override
 	public void register(Analyzed t) {		
 		dao.insert(t);
+	}
+	
+	@Override
+	public List<Analyzed> selectId(String s) {	
+		
+		return dao.selectId(s);
 	}
 
 	@Override
@@ -29,6 +36,12 @@ public class AnalyzedBiz implements Biz<Analyzed> {
 		for(Analyzed a : t)
 			dao.insert(a);
 		
+	}
+
+	@Override
+	public HashMap<String, Integer> selectCnt(String s) {
+		// TODO Auto-generated method stub
+		return dao.selectCnt(s);
 	}
 }
 	

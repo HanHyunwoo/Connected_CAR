@@ -1,13 +1,19 @@
 package com.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.frame.Biz;
@@ -18,10 +24,10 @@ import com.vo.User;
 public class MainController {
 
 	@Resource(name = "userBiz")
-	Biz<User> uBiz;
+	Biz<User, String, Integer> uBiz;
 	
 	@Resource(name = "analyzedBiz")
-	Biz<Analyzed> aBiz;
+	Biz<Analyzed, String, Integer> aBiz;
 
 	Logger log = Logger.getLogger("sensor");
 
@@ -33,8 +39,46 @@ public class MainController {
 	}
 	
 	@RequestMapping("/hexa.do")
-	public String hexa() {
-		return "hexa";
+	public String hexa(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setCharacterEncoding("EUC-KR");
+		response.setContentType("application/json");
+		
+		
+		String CarId = request.getParameter("id");
+		System.out.println("hexa.do] id : "+ CarId);
+		Analyzed anId = new Analyzed();
+		anId.setCarId(CarId);
+		HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
+		System.out.println(result.toString());
+		int a[] = new int[6];
+		a[0] = Integer.parseInt( String.valueOf(result.get("C_BURST")));
+		a[1] = Integer.parseInt( String.valueOf(result.get("C_QUICK")));
+		a[2] = Integer.parseInt( String.valueOf(result.get("C_SUDDEN")));
+		a[3] = Integer.parseInt( String.valueOf(result.get("C_DECEL")));
+		a[4] = Integer.parseInt( String.valueOf(result.get("C_SNOOZE")));
+		a[5] = Integer.parseInt( String.valueOf(result.get("C_SAFETY")));
+		
+		System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+
+		
+		JSONArray jArr = new JSONArray();
+		//SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+		
+		for(Integer index: a) {
+			jArr.add(80 - index);
+		}		
+	
+		
+		JSONArray jsonArr = new JSONArray();
+		jsonArr.add(jArr);
+
+		//System.out.println(jsonArr.toString());
+		ServletOutputStream out = response.getOutputStream();
+		out.println(jsonArr.toJSONString());
+		out.close();		
+		
+		return "main";
 	}
 	
 	@RequestMapping("/hexa3.do")

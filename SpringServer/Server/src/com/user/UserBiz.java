@@ -1,5 +1,6 @@
 package com.user;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,10 +14,10 @@ import com.vo.User;
 
 
 @Service("userBiz")
-public class UserBiz implements Biz<User> {
+public class UserBiz implements Biz<User, String, Integer> {
 
 	@Resource(name="userDao")
-	Dao<User> dao;
+	Dao<User, String, Integer> dao;
 	
 	@Transactional
 	@Override
@@ -28,6 +29,18 @@ public class UserBiz implements Biz<User> {
 	public void registerAll(List<User> t) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<User> selectId(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Integer> selectCnt(String s) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 
