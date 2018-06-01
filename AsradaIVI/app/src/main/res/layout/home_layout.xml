@@ -14,14 +14,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:layout_weight="1"
         android:background="@color/colorGray"
         android:orientation="horizontal"
         android:padding="10dp">
 
         <WebView
-            android:id="@+id/wv_search"
+            android:id="@+id/wv_energy"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
@@ -30,49 +30,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:layout_weight="9"
-        android:gravity="center_horizontal"
+        android:layout_weight="1"
+        android:background="@color/colorGray"
         android:orientation="horizontal"
-        android:padding="20dp">
+        android:padding="10dp">
+
+        <WebView
+            android:id="@+id/wv_score"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@android:dimen/notification_large_icon_height"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <com.beardedhen.androidbootstrap.AwesomeTextView
             android:id="@+id/tv_time"
             style="@style/wrapping_fa_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="top"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:textSize="18sp"
             app:bootstrapBrand="primary"
-            tools:ignore="SpUsage" />
-
-        <com.beardedhen.androidbootstrap.AwesomeTextView
-            android:id="@+id/tv_weather"
-            style="@style/wrapping_fa_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top"
-            android:layout_weight="2"
-            android:gravity="right"
-            android:text="맑음"
-            android:textSize="18sp"
-            app:bootstrapBrand="regular"
-            tools:ignore="SpUsage" />
-
-        <com.beardedhen.androidbootstrap.AwesomeTextView
-            android:id="@+id/tv_degree"
-            style="@style/wrapping_fa_text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="top"
-            android:layout_weight="2"
-            android:gravity="right"
-            android:text="100dp"
-            android:textSize="18sp"
-            app:bootstrapBrand="regular"
             tools:ignore="SpUsage" />
 
     </LinearLayout>

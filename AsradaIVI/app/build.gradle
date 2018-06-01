@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.google.maps.android:android-maps-utils:0.4+'
     implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
+    implementation 'com.github.markushi:circlebutton:1.1'
 }

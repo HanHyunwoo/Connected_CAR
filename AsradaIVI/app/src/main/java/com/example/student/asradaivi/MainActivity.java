@@ -1,6 +1,8 @@
 package com.example.student.asradaivi;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -26,11 +28,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+
+import at.markushi.ui.CircleButton;
 
 import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_HEART;
 
@@ -38,18 +43,18 @@ import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_HEART;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = String.format("%20s", "MainActivity :: ");
     private final int MENU_HOME = 0;
-    private final int MENU_ENERGY = 1;
-    private final int MENU_SCORE = 2;
-    private final int MENU_ANALYSIS = 3;
+    private final int MENU_SCORE = 1;
+    private final int MENU_ANALYSIS = 2;
+    Server server;
     LinearLayout ll_menu, ll_score, ll_map, ll_home;
     TextView tv_time;
-    TextView[] menu = new TextView[4];
+    TextView[] menu = new TextView[3];
     Date dt;
     SimpleDateFormat time;
-    WebView wv_search, wv_hexa;
-    RelativeLayout rl_energy;
+    WebView wv_score, wv_energy;
     GoogleMap mMap;
     BootstrapButton btn_led, btn_wiper;
+    CircleButton btn_snooze;
     MapManager mapManager;
     private MapRadar mapRadar;
 
@@ -62,27 +67,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        menu[0] = findViewById(R.id.tv_home);
-        menu[1] = findViewById(R.id.tv_energy);
-        menu[2] = findViewById(R.id.tv_score);
-        menu[3] = findViewById(R.id.tv_analysis);
+        try {
+            server = new Server();
+            server.start.execute();
+        } catch (IOException e) {
+            Log.d(TAG, e.getMessage());
+        }
 
-        wv_search = findViewById(R.id.wv_search);
-        wv_hexa = findViewById(R.id.wv_hexa);
-        wv_search.setWebViewClient(new WebViewClient());
-        wv_hexa.setWebViewClient(new WebViewClient());
-        WebSettings webSettings1 = wv_search.getSettings();
+        menu[0] = findViewById(R.id.tv_home);
+        menu[1] = findViewById(R.id.tv_score);
+        menu[2] = findViewById(R.id.tv_analysis);
+
+        wv_score = findViewById(R.id.wv_score);
+        wv_energy = findViewById(R.id.wv_energy);
+        wv_score.setWebViewClient(new WebViewClient());
+        wv_energy.setWebViewClient(new WebViewClient());
+        WebSettings webSettings1 = wv_score.getSettings();
         webSettings1.setJavaScriptEnabled(true);
-        WebSettings webSettings2 = wv_hexa.getSettings();
+        WebSettings webSettings2 = wv_energy.getSettings();
         webSettings2.setJavaScriptEnabled(true);
-        wv_search.loadUrl("https://www.google.com/");
+        wv_score.loadUrl(ApplicationData.score_url);
 
         ll_home = findViewById(R.id.ll_home);
         ll_home.setVisibility(View.VISIBLE);
         changeMenuColor(MENU_HOME);
-
-        rl_energy = findViewById(R.id.rl_energy);
-        rl_energy.setVisibility(View.INVISIBLE);
 
         ll_score = findViewById(R.id.ll_score);
         ll_score.setVisibility(View.INVISIBLE);
@@ -99,20 +107,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
                 if (isChecked) {
                     bootstrapButton.setText("LED OFF");
+                    server.sendMsg(5, 2);
                 } else {
                     bootstrapButton.setText("LED ON");
+                    server.sendMsg(5, 1);
                 }
             }
         });
+
+        btn_snooze = findViewById(R.id.btn_snooze);
 
         btn_wiper = findViewById(R.id.btn_wiper);
         btn_wiper.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
             @Override
             public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
                 if (isChecked) {
-                    bootstrapButton.setText("Wiper 작동 중");
-                } else {
                     bootstrapButton.setText("Wiper 작동 중지");
+                    server.sendMsg(6, 2);
+                } else {
+                    bootstrapButton.setText("Wiper 작동");
+                    server.sendMsg(6, 1);
                 }
             }
         });
@@ -123,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     Runnable r = new Runnable() {
         @Override
         public void run() {
-
             while (true) {
                 try {
                     Thread.sleep(1000);
@@ -157,32 +170,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapManager.setMapView(false);
             ll_home.setVisibility(View.VISIBLE);
             ll_score.setVisibility(View.INVISIBLE);
-            rl_energy.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
-        } else if (v.getId() == R.id.tv_energy) {
-            changeMenuColor(MENU_ENERGY);
-            mapManager.setMapView(false);
-            ll_score.setVisibility(View.INVISIBLE);
-            rl_energy.setVisibility(View.VISIBLE);
-            ll_home.setVisibility(View.INVISIBLE);
-            ll_map.setVisibility(View.INVISIBLE);
-            wv_hexa.loadUrl("http://70.12.114.144/Server/energy.do");
-        } else if (v.getId() == R.id.tv_score) {
+        }  else if (v.getId() == R.id.tv_score) {
             changeMenuColor(MENU_SCORE);
             mapManager.setMapView(false);
             ll_score.setVisibility(View.VISIBLE);
-            rl_energy.setVisibility(View.INVISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
-            wv_hexa.loadUrl("http://70.12.114.144/dash/charts/hexaChart.jsp");
-            //DO_Score();
         } else if (v.getId() == R.id.tv_analysis) {
             changeMenuColor(MENU_ANALYSIS);
-
             ll_map.setVisibility(View.VISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
             ll_score.setVisibility(View.INVISIBLE);
-            rl_energy.setVisibility(View.INVISIBLE);
             initializeMap(mMap);
             if (mapManager != null)
                 mapManager.setMapView(true);
@@ -190,38 +189,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void ClickSensorBTN(View v) {
-        Log.d("TAG", "더eoeoeo댓");
-        if (v.getId() == btn_led.getId()) {
-            Log.d("TAG", "더ㅔㅅ");
-            if (btn_led.isSelected())
-                btn_led.setText("off");
-            else
-                btn_led.setText("on");
-        } else if (v.getId() == R.id.btn_wiper) {
-            if (btn_wiper.isSelected())
-                btn_wiper.setText("off");
-            else
-                btn_wiper.setText("on");
+        if(btn_snooze.isPressed()) {
+            btn_snooze.setPressed(true);
+        } else {
+            btn_snooze.setPressed(false);
         }
     }
-
-    public void DO_Score() {
-        HttpURLConnection conn = null;
-        try {
-            URL url = new URL("http://70.12.114.143/Server/hexa.do");
-            conn = (HttpURLConnection) url.openConnection();
-            if (conn != null) {
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "*/*");
-                conn.getResponseCode();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            conn.disconnect();
-        }
-    }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -292,8 +265,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    HashMap<String, Parking> parkingmap = new HashMap<>();
-
     public void addMarker(final Parking parking) {
         runOnUiThread(new Runnable() {
             @Override
@@ -321,4 +292,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.getUiSettings().setAllGesturesEnabled(true);
         }
     }
+
+
 }
