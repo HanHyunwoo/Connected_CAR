@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.HexaDateMapper">
+
+	<!-- parameterType db에 넘겨줄때 필요함, 파라미터analyzed는 mybatis에 정의되어있다. -->
+	<!-- id="insert"는 UserMapper.java의 인터페이스메소드이름과 같아야한다. -->
+	
+	
+	<select id="selectId" parameterType="string" resultType="hexadate">
+		SELECT * FROM HEXADATE WHERE CARID = #{obj}
+	</select>
+	
+	
+</mapper>

@@ -213,11 +213,12 @@ img.fullSize {
 				<div class="inner-right float_right">
 					<div class="infoDiv" style="height: 28%; background-color: white;">
 						<div style="background-color: #3f51b5; height: 5%"></div>
-						<div style="height: 80%; padding-top: 5%;">							
-							<div><img style="width: 100%; height: auto; " src="img/carImg.png"/></div>
+						<div style="height: 80%; padding-top: 5%;">
+							<div>
+								<img style="width: 100%; height: auto;" src="img/carImg.png" />
+							</div>
 						</div>
-						<div style="height: 10%; padding-right:5%">							
-						</div>
+						<div style="height: 10%; padding-right: 5%"></div>
 						<!-- 
 					<div style="background-color: #3f51b5; height: 5%; padding-top: 1%;">
 							<div style="padding:5%; height:80%;"><img style="width: 100%; height: auto;" src="img/carImg.png"/></div>
@@ -472,7 +473,8 @@ img.fullSize {
 					[ 1248739200000, 11.0, 19.3 ],
 					[ 1248825600000, 10.8, 17.8 ],
 					[ 1248912000000, 11.8, 18.5 ],
-					[ 1248998400000, 10.8, 16.1 ] ], averages = [
+					[ 1248998400000, 10.8, 16.1 ] ], 
+			averages = [
 					[ 1246406400000, 21.5 ], [ 1246492800000, 22.1 ],
 					[ 1246579200000, 23 ], [ 1246665600000, 23.8 ],
 					[ 1246752000000, 21.4 ], [ 1246838400000, 21.3 ],
@@ -488,7 +490,9 @@ img.fullSize {
 					[ 1248480000000, 15.3 ], [ 1248566400000, 15.8 ],
 					[ 1248652800000, 15.2 ], [ 1248739200000, 14.8 ],
 					[ 1248825600000, 14.4 ], [ 1248912000000, 15 ],
-					[ 1248998400000, 13.6 ] ];
+					[ 1248998400000, 13.6 ] 
+					
+					];
 
 			Highcharts.chart('distChart', {
 
@@ -540,59 +544,80 @@ img.fullSize {
 				} ]
 			});
 		}
+		
 		$(document).ready(function func() {
+			$.ajax({
+				url : 'donut.do?id=1001',
+				success : function(data) {
+					donut(data);
+				},
+				error : function() {
+					alert('data1 fail');
+				}
+			});
 			effiChart();
 			scoreChart();
 			distChart();
 		});
 
-		var myConfig = {
-			type : "pie",
-			backgroundColor : "#ffffff",
-			source : {
-				fontColor : "#8e99a9",
-				fontFamily : "Open Sans"
-			},
-			title : {
-				fontColor : "#fff",
-				text : 'Global Browser Usage',
-				align : "left",
-				offsetX : 10,
-				fontFamily : "Open Sans",
-				fontSize : 25
-			},
-			plotarea : {
-				margin : "20 0 0 0"
-			},
-			series : [ {
-				values : [ 11.38 ],
-				text : "Internet Explorer",
-				backgroundColor : '#6877e5'
-			}, {
-				values : [ 56.94 ],
-				text : "Chrome",
-				backgroundColor : '#FF5656'
-			}, {
-				values : [ 14.52 ],
-				text : 'Firefox',
-				backgroundColor : '#FFCB45'
-			}, {
-				text : 'Safari',
-				values : [ 9.69 ],
-				backgroundColor : '#00cc44'
-			}, {
-				text : 'Other',
-				values : [ 7.48 ],
-				backgroundColor : '#50ADF5'
-			} ]
-		};
+		function donut(data) {
 
-		zingchart.render({
-			id : 'donutChart',
-			data : myConfig,
-			height : 250,
-			width : 360
-		});
+			var myConfig = {
+				type : "pie",
+				backgroundColor : "#ffffff",
+				source : {
+					fontColor : "#8e99a9",
+					fontFamily : "Open Sans"
+				},
+				title : {
+					fontColor : "#fff",
+					text : 'Global Browser Usage',
+					align : "left",
+					offsetX : 10,
+					fontFamily : "Open Sans",
+					fontSize : 25
+				},
+				plotarea : {
+					margin : "20 0 0 0"
+				},
+				series : [ {
+					text : 'SUN',
+					values : [ 7.48 ],
+					backgroundColor : '#FF5656'
+				}, {
+					values : [ 11.38 ],
+					text : "MON",
+					backgroundColor : '#ff9933'
+				}, {
+					values : [ 20.94 ],
+					text : "TUE",
+					backgroundColor : '#ffcc00'
+				}, {
+					values : [ 14.52 ],
+					text : 'WED',
+					backgroundColor : '#00cc44'
+				}, {
+					text : 'THU',
+					values : [ 9.69 ],
+					backgroundColor : '#50ADF5'
+				}, {
+					text : 'FIR',
+					values : [ 7.48 ],
+					backgroundColor : '#000066'
+				}, {
+					text : 'SAT',
+					values : [ 7.48 ],
+					backgroundColor : '#660066'
+				} ]
+			};
+
+			zingchart.render({
+				id : 'donutChart',
+				data : myConfig,
+				height : 250,
+				width : 360
+			});
+		}
 	</script>
 	<!-- Bootstrap core JavaScript -->
 	<script src="vendor/jquery/jquery.min.js"></script>
