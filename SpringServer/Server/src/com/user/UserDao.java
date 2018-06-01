@@ -37,4 +37,10 @@ public class UserDao implements Dao<User, String, Integer> {
 		return null;
 	}
 
+	@Override
+	public List<User> selectRg(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

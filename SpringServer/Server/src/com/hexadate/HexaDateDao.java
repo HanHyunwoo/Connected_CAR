@@ -39,5 +39,11 @@ public class HexaDateDao implements Dao<HexaDate, String, Integer>{
 		return null;
 	}
 
+	@Override
+	public List<HexaDate> selectRg(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

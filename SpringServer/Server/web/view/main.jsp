@@ -269,7 +269,7 @@ img.fullSize {
 									type : 'column'
 								},
 								title : {
-									text : 'Browser market shares. January, 2018'
+									text : 'SCORE CHART'
 								},
 								subtitle : {
 									text : 'Click the columns to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
@@ -391,7 +391,7 @@ img.fullSize {
 					type : 'areaspline'
 				},
 				title : {
-					text : 'Average fruit consumption during one week'
+					text : 'EffiChart'
 				},
 				legend : {
 					layout : 'vertical',
@@ -497,7 +497,7 @@ img.fullSize {
 			Highcharts.chart('distChart', {
 
 				title : {
-					text : 'July temperatures'
+					text : 'DistChart'
 				},
 
 				xAxis : {
@@ -545,21 +545,7 @@ img.fullSize {
 			});
 		}
 		
-		$(document).ready(function func() {
-			$.ajax({
-				url : 'donut.do?id=1001',
-				success : function(data) {
-					donut(data);
-				},
-				error : function() {
-					alert('data1 fail');
-				}
-			});
-			effiChart();
-			scoreChart();
-			distChart();
-		});
-
+		
 		function donut(data) {
 
 			var myConfig = {
@@ -580,35 +566,7 @@ img.fullSize {
 				plotarea : {
 					margin : "20 0 0 0"
 				},
-				series : [ {
-					text : 'SUN',
-					values : [ 7.48 ],
-					backgroundColor : '#FF5656'
-				}, {
-					values : [ 11.38 ],
-					text : "MON",
-					backgroundColor : '#ff9933'
-				}, {
-					values : [ 20.94 ],
-					text : "TUE",
-					backgroundColor : '#ffcc00'
-				}, {
-					values : [ 14.52 ],
-					text : 'WED',
-					backgroundColor : '#00cc44'
-				}, {
-					text : 'THU',
-					values : [ 9.69 ],
-					backgroundColor : '#50ADF5'
-				}, {
-					text : 'FIR',
-					values : [ 7.48 ],
-					backgroundColor : '#000066'
-				}, {
-					text : 'SAT',
-					values : [ 7.48 ],
-					backgroundColor : '#660066'
-				} ]
+				series : data
 			};
 
 			zingchart.render({
@@ -617,7 +575,52 @@ img.fullSize {
 				height : 250,
 				width : 360
 			});
+			
+			
 		}
+		
+		$(document).ready(function func() {
+			$.ajax({
+				url : 'donut.do?id=1001',
+				success : function(data) {
+					donut(data);
+				},
+				error : function() {
+					alert('data1 fail');
+				}
+			});
+			/* $.ajax({
+				url : 'effichart.do?id=1001',
+				success : function(data) {
+					effiChart(data);
+				},
+				error : function() {
+					alert('data1 fail');
+				}
+			});
+			$.ajax({
+				url : 'distchart.do?id=1001',
+				success : function(data) {
+					distChart(data);
+				},
+				error : function() {
+					alert('data1 fail');
+				}
+			});
+			$.ajax({
+				url : 'scorechart.do?id=1001',
+				success : function(data) {
+					scoreChart(data);
+				},
+				error : function() {
+					alert('data1 fail');
+				}
+			}); */
+			effiChart();
+			scoreChart();
+			distChart();
+		});
+
 	</script>
 	<!-- Bootstrap core JavaScript -->
 	<script src="vendor/jquery/jquery.min.js"></script>

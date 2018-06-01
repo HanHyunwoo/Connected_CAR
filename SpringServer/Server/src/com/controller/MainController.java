@@ -45,6 +45,17 @@ public class MainController {
 	}
 	
 	
+	@RequestMapping("/range.do")
+	public void range(HttpServletResponse response, HttpServletRequest request) throws IOException {
+		
+		String id = request.getParameter("id");
+		List<HexaDate> hd = hBiz.selectRg(id);
+		for(HexaDate index : hd)
+			System.out.println(index.toString());
+		
+	}
+	
+	
 	@RequestMapping("/donut.do")
 	public void donut(HttpServletResponse response, HttpServletRequest request) throws IOException {
 		
@@ -57,8 +68,7 @@ public class MainController {
 		System.out.println("checkpoint1!!!!!!!!!!!!");
 		List<HexaDate> result = hBiz.selectId(id);
 		System.out.println(result.get(1).getScore());
-		System.out.println("checkpoint2!!!!!!!!!!!!");
-		
+		System.out.println("checkpoint2!!!!!!!!!!!!");	
 		
 		
 		
@@ -66,14 +76,15 @@ public class MainController {
 		for(int i=0;i<7;i++) {
 			JSONObject jo = new JSONObject();
 			jo.put("backgroundColor", bgColor[i]);
-			jo.put("values", result.get(i).getScore());
 			jo.put("text", text[i]);
+			jo.put("values", result.get(i).getScore());
+			
 			jArr.add(jo);
 		}
 
 		System.out.println(jArr.toString());
 		//System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out = response.getOutputStream();		
 		out.println(jArr.toJSONString());
 		out.close();	
 		
@@ -122,6 +133,8 @@ public class MainController {
 		
 		return "main";
 	}
+	
+
 	
 	@RequestMapping("/hexa2.do")
 	public void hexa2(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {

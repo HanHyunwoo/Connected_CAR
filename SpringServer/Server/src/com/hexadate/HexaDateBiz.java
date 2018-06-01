@@ -22,8 +22,7 @@ public class HexaDateBiz implements Biz<HexaDate, String, Integer> {
 
 	@Override
 	public void register(HexaDate t) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
@@ -37,6 +36,11 @@ public class HexaDateBiz implements Biz<HexaDate, String, Integer> {
 		return dao.selectId(s);
 	}
 
+
+	@Override
+	public List<HexaDate> selectRg(String s) {
+		return dao.selectRg(s);
+	}
 	@Override
 	public HashMap<String, Integer> selectCnt(String s) {
 		// TODO Auto-generated method stub

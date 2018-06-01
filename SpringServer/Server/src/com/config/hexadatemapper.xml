@@ -13,4 +13,11 @@ PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
 	</select>
 	
 	
+	<!-- 날짜, 베터리 효율 최대, 베터리 효율 최소, user 베터리 효율, 베터리 평균 -->	
+	<!--  -->
+	<select id="selectRg" parameterType="string" resultType="hexadate">
+		
+	</select>
+	
+	
 </mapper>

@@ -42,6 +42,12 @@ public class UserBiz implements Biz<User, String, Integer> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<User> selectRg(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 
 

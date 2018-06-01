@@ -43,5 +43,11 @@ public class AnalyzedBiz implements Biz<Analyzed, String, Integer> {
 		// TODO Auto-generated method stub
 		return dao.selectCnt(s);
 	}
+
+	@Override
+	public List<Analyzed> selectRg(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
 	

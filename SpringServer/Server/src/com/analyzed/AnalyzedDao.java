@@ -25,6 +25,13 @@ public class AnalyzedDao implements Dao<Analyzed, String, Integer>{
 		
 		return mapper.selectId(s);
 	}
+	
+
+	@Override
+	public List<Analyzed> selectRg(String s) {
+		
+		return mapper.selectId(s);
+	}
 	@Override
 	public void insertAll(List<Analyzed> t) {
 		mapper.insertAll(t);
