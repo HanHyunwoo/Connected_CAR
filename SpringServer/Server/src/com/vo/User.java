@@ -64,4 +64,10 @@ public class User {
 	public void setCATE(String cATE) {
 		CATE = cATE;
 	}
+
+	@Override
+	public String toString() {
+		return "User [USERID=" + USERID + ", USERPW=" + USERPW + ", USERPHONE=" + USERPHONE + ", USERBIRTH=" + USERBIRTH
+				+ ", USERADDR=" + USERADDR + ", CATE=" + CATE + "]";
+	}
 }

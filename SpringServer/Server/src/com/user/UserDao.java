@@ -1,5 +1,7 @@
 package com.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.frame.Dao;
@@ -14,6 +16,12 @@ public class UserDao implements Dao<User> {
 	@Override
 	public void insert(User t) {
 		mapper.insert(t);
+	}
+
+	@Override
+	public void insertAll(List<User> t) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

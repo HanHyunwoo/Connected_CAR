@@ -43,7 +43,7 @@ public class FTPUploader {
 						ftpUploader.uploadFile("C:\\logs\\sensor.log", "sensor.csv", "/root/sensorLog/");
 						ftpUploader.disconnect();
 						System.out.println("============================ [" + dTime + "] sensor.csv File Transfer Success ===============");
-						Thread.sleep(1000 * 60 * 5); // 5분
+						Thread.sleep(1000 * 60 * 1); // 1분
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -58,7 +58,7 @@ public class FTPUploader {
 				Calendar calendar = Calendar.getInstance();
 				// 특정시간부터(미래) 시작하고자 할 경우 아래와같이 .set으로 설정, 안해도 무방함
 				calendar.set(2018, 4, 25, 11, 25, 0); // 년,월(0~11,즉 5월은 4),일,시,분,초 지정
-				timer.schedule(new MyTask(), new Date(calendar.getTimeInMillis()), 3600000); // 24 * 60 * 60 * 1000
+				timer.schedule(new MyTask(), new Date(calendar.getTimeInMillis()), 3600000);//테스트용도로 1시간간격 24 * 60 * 60 * 1000, 실제론 하루에 1번만 되면 됨 
 			}
 
 			class MyTask extends TimerTask {

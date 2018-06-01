@@ -6,11 +6,13 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 	<typeAliases>
 		<!-- <typeAlias type="com.vo.Log" alias="log"/> -->
 		<typeAlias type="com.vo.User" alias="user"/>
+		<typeAlias type="com.vo.Analyzed" alias="analyzed"/>
 	</typeAliases>
 	
 	<mappers>
 		<!-- <mapper resource="com/config/logmapper.xml"/> -->
 		<mapper resource="com/config/usermapper.xml"/>
+		<mapper resource="com/config/analyzedmapper.xml"/>
 	</mappers>
 		
 </configuration>

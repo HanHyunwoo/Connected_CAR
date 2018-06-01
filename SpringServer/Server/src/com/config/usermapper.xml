@@ -12,6 +12,4 @@ PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
    	    insert into USERINFO values (#{USERID},#{USERPW},#{USERPHONE},#{USERBIRTH},#{USERADDR},#{CATE}) 
 	</insert>
     
-    
-    
 </mapper>
