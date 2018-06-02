@@ -116,8 +116,8 @@ public class ContactAdapter extends BaseAdapter {
         btn_call  = vw.findViewById(R.id.btn_call);
 
         Contact user = list.get(i);
-        name.setText("이름 : " + user.getName());
-        number.setText("NUMBER : " + user.getPhone());
+        name.setText(user.getName());
+        number.setText(user.getPhone());
 
         clickCall(user.getPhone());
         return vw;
