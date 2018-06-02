@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.frame.Dao;
 import com.mapper.HexaDateMapper;
 import com.vo.HexaDate;
+import com.vo.Score;
 
 @Repository("hexaDateDao") // default 가 첫글자 소문자, 이름 변경해서 사용하고 싶을 때 ("xxx")
 public class HexaDateDao implements Dao<HexaDate, String, Integer>{
@@ -43,6 +44,30 @@ public class HexaDateDao implements Dao<HexaDate, String, Integer>{
 	public List<HexaDate> selectRg(String s) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Score> selectScore(String s) {
+		// TODO Auto-generated method stub
+		return mapper.selectScore(s);
+	}
+
+	@Override
+	public List<HexaDate> selectScore2(String s) {
+		// TODO Auto-generated method stub
+		return mapper.selectScore2(s);
+	}
+
+	@Override
+	public List<HexaDate> selectEffi(String s) {
+		// TODO Auto-generated method stub
+		return mapper.selectEffi(s);
+	}
+
+	@Override
+	public List<HexaDate> selectMaxMin() {
+		// TODO Auto-generated method stub
+		return mapper.selectMaxMin();
 	}
 
 	

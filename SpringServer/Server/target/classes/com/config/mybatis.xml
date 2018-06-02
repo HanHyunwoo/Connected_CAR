@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org/DTD Config 3.0//EN"
 		<typeAlias type="com.vo.User" alias="user"/>
 		<typeAlias type="com.vo.Analyzed" alias="analyzed"/>
 		<typeAlias type="com.vo.HexaDate" alias="hexadate"/>
+		<typeAlias type="com.vo.Score" alias="score"/>
 	</typeAliases>
 	
 	<mappers>

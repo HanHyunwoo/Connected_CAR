@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
 	
 	
 	<select id="selectId" parameterType="string" resultType="hexadate">
-		SELECT * FROM HEXADATE WHERE CARID = #{obj}
+	SELECT * FROM HEXADATE WHERE CARID = #{obj}
 	</select>
 	
 	
@@ -17,6 +17,23 @@ PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
 	<!--  -->
 	<select id="selectRg" parameterType="string" resultType="hexadate">
 		
+	</select>
+	
+	<select id="selectScore" parameterType="string" resultType="score">
+	select to_char(daydate,'mm-dd') "date",SCORE from HexaDate where carid=#{obj}
+	</select>
+	
+	<select id="selectEffi" parameterType="string" resultType="hexadate">
+	select to_char(daydate,'mm-dd') "date", efficiency from HexaDate where carid=#{obj} ORDER BY to_char(daydate,'mm-dd')
+	</select>
+	
+	<select id="selectScore2" parameterType="string" resultType="hexadate">
+	select  to_char(daydate,'mm-dd') "date" ,c_Burst,c_Deceleration,c_QuickStart,c_SuddenStop,c_SafetyDis,c_Snooze 
+from HexaDate where carid=#{obj}
+	</select>
+	
+	<select id="selectMaxMin" resultType="hexadate">
+	select to_char(daydate,'mm-dd') "date" ,max(efficiency) max_efficiency, min(efficiency) min_efficiency from HexaDate group by DayDate ORDER BY to_char(daydate,'mm-dd') 
 	</select>
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.frame.Dao;
 import com.mapper.AnalyzedMapper;
 import com.vo.Analyzed;
+import com.vo.Score;
 
 @Repository("analyzedDao") // default 가 첫글자 소문자, 이름 변경해서 사용하고 싶을 때 ("xxx")
 public class AnalyzedDao implements Dao<Analyzed, String, Integer>{
@@ -43,5 +44,31 @@ public class AnalyzedDao implements Dao<Analyzed, String, Integer>{
 		// TODO Auto-generated method stub
 		return mapper.selectCnt(s);
 	}
+
+	@Override
+	public List<Score> selectScore(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectScore2(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectEffi(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectMaxMin() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 }

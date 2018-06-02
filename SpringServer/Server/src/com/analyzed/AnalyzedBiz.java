@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.frame.Biz;
 import com.frame.Dao;
 import com.vo.Analyzed;
+import com.vo.Score;
 
 
 @Service("analyzedBiz")
@@ -49,5 +50,30 @@ public class AnalyzedBiz implements Biz<Analyzed, String, Integer> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Score> selectScore(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectScore2(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectEffi(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Analyzed> selectMaxMin() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 	

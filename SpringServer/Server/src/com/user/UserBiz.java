@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.frame.Biz;
 import com.frame.Dao;
+import com.vo.Score;
 import com.vo.User;
 
 
@@ -45,6 +46,30 @@ public class UserBiz implements Biz<User, String, Integer> {
 
 	@Override
 	public List<User> selectRg(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Score> selectScore(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> selectScore2(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> selectEffi(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> selectMaxMin() {
 		// TODO Auto-generated method stub
 		return null;
 	}

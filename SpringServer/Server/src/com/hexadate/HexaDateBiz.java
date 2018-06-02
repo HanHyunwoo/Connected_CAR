@@ -12,6 +12,7 @@ import com.frame.Biz;
 import com.frame.Dao;
 import com.vo.Analyzed;
 import com.vo.HexaDate;
+import com.vo.Score;
 
 
 @Service("hexaDateBiz")
@@ -46,5 +47,30 @@ public class HexaDateBiz implements Biz<HexaDate, String, Integer> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<Score> selectScore(String s) {
+		// TODO Auto-generated method stub
+		return dao.selectScore(s);
+	}
+
+	@Override
+	public List<HexaDate> selectScore2(String s) {
+		// TODO Auto-generated method stub
+		return dao.selectScore2(s);
+	}
+
+	@Override
+	public List<HexaDate> selectEffi(String s) {
+		// TODO Auto-generated method stub
+		return dao.selectEffi(s);
+	}
+
+	@Override
+	public List<HexaDate> selectMaxMin() {
+		// TODO Auto-generated method stub
+		return dao.selectMaxMin();
+	}
+
 }
 	
