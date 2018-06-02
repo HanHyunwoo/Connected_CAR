@@ -25,213 +25,408 @@ import com.vo.User;
 @Controller
 public class MainController {
 
-	@Resource(name = "userBiz")
-	Biz<User, String, Integer> uBiz;
-	
-	@Resource(name = "analyzedBiz")
-	Biz<Analyzed, String, Integer> aBiz;
-	
+   @Resource(name = "userBiz")
+   Biz<User, String, Integer> uBiz;
+   
+   @Resource(name = "analyzedBiz")
+   Biz<Analyzed, String, Integer> aBiz;
+   
 
-	@Resource(name = "hexaDateBiz")
-	Biz<HexaDate, String, Integer> hBiz;
+   @Resource(name = "hexaDateBiz")
+   Biz<HexaDate, String, Integer> hBiz;
 
-	Logger log = Logger.getLogger("sensor");
+   Logger log = Logger.getLogger("sensor");
 
-	@RequestMapping("/main.do")
-	public String main() {
-		
-		
-		return "main";
-	}
-	
-	
-	@RequestMapping("/range.do")
-	public void range(HttpServletResponse response, HttpServletRequest request) throws IOException {
-		
-		String id = request.getParameter("id");
-		List<HexaDate> hd = hBiz.selectRg(id);
-		for(HexaDate index : hd)
-			System.out.println(index.toString());
-		
-	}
-	
-	
-	@RequestMapping("/donut.do")
-	public void donut(HttpServletResponse response, HttpServletRequest request) throws IOException {
-		
-		String text[] = {"SUN", "MON", "TUE", "WED", "THU", "FRI","SAT"};
-		int values[] = {10, 12, 14, 15 ,9, 20,5};
-		String bgColor[] = {"#FF5656", "#ff9933", "#ffcc00", "#00cc44", "#50ADF5", "#000066", "#660066"};
-		System.out.println("dount.do]~~~~~~~~");
+   @RequestMapping("/main.do")
+   public String main() {
+      
+      
+      return "main";
+   }
+   
+   
+   @RequestMapping("/range.do")
+   public void range(HttpServletResponse response, HttpServletRequest request) throws IOException {
+      
+      String id = request.getParameter("id");
+      List<HexaDate> hd = hBiz.selectRg(id);
+      for(HexaDate index : hd)
+         System.out.println(index.toString());
+      
+   }
+   
+   
+   @RequestMapping("/donut.do")
+   public void donut(HttpServletResponse response, HttpServletRequest request) throws IOException {
+      
+      String text[] = {"SUN", "MON", "TUE", "WED", "THU", "FRI","SAT"};
+      int values[] = {10, 12, 14, 15 ,9, 20,5};
+      String bgColor[] = {"#FF5656", "#ff9933", "#ffcc00", "#00cc44", "#50ADF5", "#000066", "#660066"};
+      System.out.println("dount.do]~~~~~~~~");
 
-		String id = request.getParameter("id");
-		System.out.println("checkpoint1!!!!!!!!!!!!");
-		List<HexaDate> result = hBiz.selectId(id);
-		System.out.println(result.get(1).getScore());
-		System.out.println("checkpoint2!!!!!!!!!!!!");	
-		
-		
-		
-		JSONArray jArr = new JSONArray();
-		for(int i=0;i<7;i++) {
-			JSONObject jo = new JSONObject();
-			jo.put("backgroundColor", bgColor[i]);
-			jo.put("text", text[i]);
-			jo.put("values", result.get(i).getScore());
-			
-			jArr.add(jo);
-		}
+      String id = request.getParameter("id");
+      System.out.println("checkpoint1!!!!!!!!!!!!");
+      //List<HexaDate> result = hBiz.selectId(id);
+      //System.out.println(result.get(1).getScore());
+      System.out.println("checkpoint2!!!!!!!!!!!!");   
+      
+      
+      
+      JSONArray jArr = new JSONArray();
+      for(int i=0;i<7;i++) {
+         JSONObject jo = new JSONObject();
+         jo.put("backgroundColor", bgColor[i]);
+         jo.put("text", text[i]);
+         //jo.put("values", result.get(i).getScore());
+         JSONArray a = new JSONArray();
+         a.add(values[i]);
+         jo.put("values", a);
+         jArr.add(jo);
+      }
 
-		System.out.println(jArr.toString());
-		//System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();		
-		out.println(jArr.toJSONString());
-		out.close();	
-		
-	}
-	
-	
-	@RequestMapping("/hexa.do")
-	public String hexa(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+      System.out.println(jArr.toString());
+      //System.out.println(jsonArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+      
+   }
+   
 
-		response.setCharacterEncoding("EUC-KR");
-		response.setContentType("application/json");
-		
-		
-		String CarId = request.getParameter("id");
-		System.out.println("hexa.do] id : "+ CarId);
-		Analyzed anId = new Analyzed();
-		anId.setCarId(CarId);
-		HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
-		System.out.println(result.toString());
-		int a[] = new int[6];
-		a[0] = Integer.parseInt( String.valueOf(result.get("C_BURST")));
-		a[1] = Integer.parseInt( String.valueOf(result.get("C_QUICK")));
-		a[2] = Integer.parseInt( String.valueOf(result.get("C_SUDDEN")));
-		a[3] = Integer.parseInt( String.valueOf(result.get("C_DECEL")));
-		a[4] = Integer.parseInt( String.valueOf(result.get("C_SNOOZE")));
-		a[5] = Integer.parseInt( String.valueOf(result.get("C_SAFETY")));
-		
-		System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+   @RequestMapping("/effi.do")
+   public void effi(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      
 
-		
-		JSONArray jArr = new JSONArray();
-		//SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
-		
-		for(Integer index: a) {
-			jArr.add(80 - index);
-		}		
-	
-		
-		JSONArray jsonArr = new JSONArray();
-		jsonArr.add(jArr);
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
 
-		//System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
-		out.println(jsonArr.toJSONString());
-		out.close();		
-		
-		return "main";
-	}
-	
+      String names[] = {"John", "Jane"};
+      int datas[][] = {
+            {5, 2, 1, 6, 10, 7, 11},
+            {5,5,5,5,5,5,5}            
+      };
+      
+      JSONArray jArr = new JSONArray();
+      
+      for(int i=0;i<2;i++) {
+         JSONObject jo = new JSONObject();
+         jo.put("name", names[i]);
+         JSONArray jArrInner = new JSONArray();
+         for(int j=0;j<7;j++) {
+            jArrInner.add(datas[i][j]);
+         }         
+         jo.put("data", jArrInner);
+         jArr.add(jo);
+      }
+      
+      System.out.println(jArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+   }
+   
 
-	
-	@RequestMapping("/hexa2.do")
-	public void hexa2(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+   @RequestMapping("/score1.do")
+   public void score(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      
 
-		response.setCharacterEncoding("EUC-KR");
-		response.setContentType("application/json");
-		
-		
-		String CarId = request.getParameter("id");
-		System.out.println("hexa.do] id : "+ CarId);
-		Analyzed anId = new Analyzed();
-		anId.setCarId(CarId);
-		HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
-		System.out.println(result.toString());
-		int a[] = new int[6];
-		a[0] = Integer.parseInt( String.valueOf(result.get("C_BURST")));
-		a[1] = Integer.parseInt( String.valueOf(result.get("C_QUICK")));
-		a[2] = Integer.parseInt( String.valueOf(result.get("C_SUDDEN")));
-		a[3] = Integer.parseInt( String.valueOf(result.get("C_DECEL")));
-		a[4] = Integer.parseInt( String.valueOf(result.get("C_SNOOZE")));
-		a[5] = Integer.parseInt( String.valueOf(result.get("C_SAFETY")));
-		
-		System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
 
-		
-		JSONArray jArr = new JSONArray();
-		//SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
-		
-		for(Integer index: a) {
-			jArr.add(80 - index);
-			}			
-		
-		JSONArray jsonArr = new JSONArray();
-		jsonArr.add(jArr);
-		//System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
-		out.println(jsonArr.toJSONString());
-		out.close();
-		
-		
-	}
+      String names[] = {"SUN", "MON", "TUE", "WED","THR","FRI","SAT"};
+      int datas[] = {7, 5, 8,9,7,5,6};
+      /*
+       *[ {
+                              "name" : "Firefox",
+                              "y" : 10.57,
+                              "drilldown" : "Firefox"
+                           }, {
+                              "name" : "Internet Explorer",
+                              "y" : 7.23,
+                              "drilldown" : "Internet Explorer"
+                           }, {
+                              "name" : "Safari",
+                              "y" : 5.58,
+                              "drilldown" : "Safari"
+                           }, {
+                              "name" : "Edge",
+                              "y" : 4.02,
+                              "drilldown" : "Edge"
+                           }, {
+                              "name" : "Opera",
+                              "y" : 1.92,
+                              "drilldown" : "Opera"
+                           }, {
+                              "name" : "Other",
+                              "y" : 7.62,
+                              "drilldown" : null
+                           } ]
+       *
+*/      JSONArray jArr = new JSONArray();
+      
+      for(int i=0;i<names.length;i++) {
+         JSONObject jo = new JSONObject();
+         jo.put("name", names[i]);
+         jo.put("y", datas[i]);
+         jo.put("drilldown", names[i]);
+         jArr.add(jo);
+      }
+      
+      System.out.println(jArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+   }
+   
 
-	@RequestMapping("/logAdd.do")  //logApply
-	public String apply(HttpServletRequest res) {
+
+   @RequestMapping("/score2.do")
+   public void score2(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      
+
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
+
+      String names[] = {"SUN", "MON", "TUE", "WED","THR","FRI","SAT"};
+      String colNames[] = {"COL1", "COL2", "COL3","COL4","COL5","COL6"};
+      int datas[] = {1, 2, 3, 4, 5, 6};
+      /*
+       *[
+                                 {
+                                    "name" : "Firefox",
+                                    "id" : "Firefox",
+                                    "data" : [ [ "v58.0", 1.02 ],
+                                          [ "v57.0", 7.36 ],
+                                          [ "v56.0", 0.35 ],
+                                          [ "v55.0", 0.11 ],
+                                          [ "v54.0", 0.1 ],
+                                          [ "v52.0", 0.95 ],
+                                          [ "v51.0", 0.15 ],
+                                          [ "v50.0", 0.1 ],
+                                          [ "v48.0", 0.31 ],
+                                          [ "v47.0", 0.12 ] ]
+                                 }
+                                 ]
+       *
+*/      JSONArray jArr = new JSONArray();
+      
+      for(int i=0;i<names.length;i++) {
+         JSONObject jo = new JSONObject();
+         jo.put("name", names[i]);
+         jo.put("id", names[i]);
+         JSONArray ja = new JSONArray();
+         for(int j=0;j<datas.length;j++) {
+            JSONArray ja2 = new JSONArray();
+            ja2.add(colNames[j]);
+            ja2.add(datas[j]);
+            ja.add(ja2);
+         }         
+         jo.put("data", ja);
+         jArr.add(jo);
+      }
+      
+      System.out.println(jArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+   }
+   
+
+   @RequestMapping("/dist1.do")
+   public void dist1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      
+   
+
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
+      
+      double lowCut[] = {14.4, 12.5, 12.4, 15.6, 13.2, 11.1, 12.8};
+      double highCut[] = {17.2, 14.5, 15.8, 16.6, 16.2, 15.1, 15.8};
+      JSONArray jArr = new JSONArray();
+      
+      for(int i=0;i<lowCut.length;i++) {
+         JSONArray ja = new JSONArray();
+         ja.add(i);
+         ja.add(lowCut[i]);
+         ja.add(highCut[i]);
+         jArr.add(ja);
+      }
+      System.out.println("dist1 : ");
+      System.out.println(jArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+   }
+   
+   @RequestMapping("/dist2.do")
+   public void dist2(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
+         
+      double lowCut[] = {14.4, 12.5, 12.4, 15.6, 13.2, 11.1, 12.8};
+      double highCut[] = {17.2, 14.5, 15.8, 16.6, 16.2, 15.1, 15.8};
+      double avg[] = new double[7];
+      for(int i=0;i<highCut.length;i++)
+         avg[i] = (lowCut[i]+highCut[i])/2;
+      
+      JSONArray jArr = new JSONArray();
+      
+      for(int i=0;i<avg.length;i++) {
+         JSONArray ja = new JSONArray();
+         ja.add(i);
+         ja.add(avg[i]);
+         jArr.add(ja);
+      }
+      System.out.println("dist2 : ");
+      System.out.println(jArr.toString());
+      ServletOutputStream out = response.getOutputStream();      
+      out.println(jArr.toJSONString());
+      out.close();   
+   }
+   
+   
+   @RequestMapping("/hexa.do")
+   public String hexa(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
+      
+      
+      String CarId = request.getParameter("id");
+      System.out.println("hexa.do] id : "+ CarId);
+      Analyzed anId = new Analyzed();
+      anId.setCarId(CarId);
+      HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
+      System.out.println(result.toString());
+      int a[] = new int[6];
+      a[0] = Integer.parseInt( String.valueOf(result.get("C_BURST")));
+      a[1] = Integer.parseInt( String.valueOf(result.get("C_QUICK")));
+      a[2] = Integer.parseInt( String.valueOf(result.get("C_SUDDEN")));
+      a[3] = Integer.parseInt( String.valueOf(result.get("C_DECEL")));
+      a[4] = Integer.parseInt( String.valueOf(result.get("C_SNOOZE")));
+      a[5] = Integer.parseInt( String.valueOf(result.get("C_SAFETY")));
+      
+      System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+
+      
+      JSONArray jArr = new JSONArray();
+      //SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+      
+      for(Integer index: a) {
+         jArr.add(80 - index);
+      }      
+   
+      
+      JSONArray jsonArr = new JSONArray();
+      jsonArr.add(jArr);
+
+      //System.out.println(jsonArr.toString());
+      ServletOutputStream out = response.getOutputStream();
+      out.println(jsonArr.toJSONString());
+      out.close();      
+      
+      return "main";
+   }
+   
+
+   
+   @RequestMapping("/hexa2.do")
+   public void hexa2(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+      response.setCharacterEncoding("EUC-KR");
+      response.setContentType("application/json");
+      
+      
+      String CarId = request.getParameter("id");
+      System.out.println("hexa.do] id : "+ CarId);
+      Analyzed anId = new Analyzed();
+      anId.setCarId(CarId);
+      HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
+      System.out.println(result.toString());
+      int a[] = new int[6];
+      a[0] = Integer.parseInt( String.valueOf(result.get("C_BURST")));
+      a[1] = Integer.parseInt( String.valueOf(result.get("C_QUICK")));
+      a[2] = Integer.parseInt( String.valueOf(result.get("C_SUDDEN")));
+      a[3] = Integer.parseInt( String.valueOf(result.get("C_DECEL")));
+      a[4] = Integer.parseInt( String.valueOf(result.get("C_SNOOZE")));
+      a[5] = Integer.parseInt( String.valueOf(result.get("C_SAFETY")));
+      
+      System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+
+      
+      JSONArray jArr = new JSONArray();
+      //SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+      
+      for(Integer index: a) {
+         jArr.add(80 - index);
+         }         
+      
+      JSONArray jsonArr = new JSONArray();
+      jsonArr.add(jArr);
+      //System.out.println(jsonArr.toString());
+      ServletOutputStream out = response.getOutputStream();
+      out.println(jsonArr.toJSONString());
+      out.close();
+      
+      
+   }
+
+   @RequestMapping("/logAdd.do")  //logApply
+   public String apply(HttpServletRequest res) {
 //http://70.12.114.143/Server/logAdd.do?CARID=1234&ACCEL=0&DECEL=1&SAFETYDIS=0&SNOOZE=0&SPEED=0&BATTERY=0&RPM=3
 //http://70.12.114.143/Server/hexaAdd.do?HEXSEQ=1&HEXSTART=0&HEXDECEL=1&HEXSTOP=0&HEXACCEL=0&HEXSAFETYDIS=0&HEXSNOOZE=0&CARID=123B
-		
-		String CARID = res.getParameter("CARID");
-		String ACCEL = res.getParameter("ACCEL");
-		String DECEL = res.getParameter("DECEL");
-		String SAFETYDIS = res.getParameter("SAFETYDIS");
-		String SNOOZE = res.getParameter("SNOOZE");
-		String SPEED = res.getParameter("SPEED");
-		String BATTERY = res.getParameter("BATTERY");
-		
-		//System.out.println(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
-		log.debug(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
-		return "hexaAdd";
-	}
-	
-	@RequestMapping("/userAdd.do")
-	public String userAdd(HttpServletRequest res, User user) {
-		// http://70.12.114.143/Server/userAdd.do?USERID=hhw1990&USERPW=1234&USERPHONE=01093471926&USERBIRTH=900525&USERADDR=seoul&CATE=0
-		uBiz.register(user);
-		System.out.println(user.toString());
-		return "userAdd";
-	}
-	
-	@RequestMapping("/analyzedAdd.do")
-	public void analyzedAdd(HttpServletRequest res, User user) {
-		// http://70.12.114.143/Server/userAdd.do?USERID=hhw1990&USERPW=1234&USERPHONE=01093471926&USERBIRTH=900525&USERADDR=seoul&CATE=0
-		HadoopDataToss hdt = new HadoopDataToss();
-		List<Analyzed> list = new ArrayList<Analyzed>();
-		Analyzed an = new Analyzed();
-		System.out.println("üũ1");
-		try {
-			list = hdt.call();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		//System.out.println("üũ2");
-		//System.out.println(list.toString());
-		/*an.setBattery(777);
-		an.setBurst(0);
-		an.setCarId("333");
-		an.setDateEnd("2018-06-01 08:17:45");
-		an.setDateStart("2018-06-01 08:17:45");
-		an.setDeceleration(1);
-		an.setQuickStart(2);
-		an.setSafetyDis(3);
-		an.setSnooze(3);
-		an.setSuddenStop(2);
-		aBiz.register(an);
-		System.out.println("Regist OK!!!");*/
-		System.out.println("üũ3");
-		aBiz.registerAll(list);
-		System.out.println("üũ4");
-	}
-	
+      
+      String CARID = res.getParameter("CARID");
+      String ACCEL = res.getParameter("ACCEL");
+      String DECEL = res.getParameter("DECEL");
+      String SAFETYDIS = res.getParameter("SAFETYDIS");
+      String SNOOZE = res.getParameter("SNOOZE");
+      String SPEED = res.getParameter("SPEED");
+      String BATTERY = res.getParameter("BATTERY");
+      
+      //System.out.println(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
+      log.debug(CARID +"," + ACCEL + "," + DECEL + "," + SAFETYDIS + "," + SNOOZE + "," + SPEED + "," + BATTERY);
+      return "hexaAdd";
+   }
+   
+   @RequestMapping("/userAdd.do")
+   public String userAdd(HttpServletRequest res, User user) {
+      // http://70.12.114.143/Server/userAdd.do?USERID=hhw1990&USERPW=1234&USERPHONE=01093471926&USERBIRTH=900525&USERADDR=seoul&CATE=0
+      uBiz.register(user);
+      System.out.println(user.toString());
+      return "userAdd";
+   }
+   
+   @RequestMapping("/analyzedAdd.do")
+   public void analyzedAdd(HttpServletRequest res, User user) {
+      // http://70.12.114.143/Server/userAdd.do?USERID=hhw1990&USERPW=1234&USERPHONE=01093471926&USERBIRTH=900525&USERADDR=seoul&CATE=0
+      HadoopDataToss hdt = new HadoopDataToss();
+      List<Analyzed> list = new ArrayList<Analyzed>();
+      Analyzed an = new Analyzed();
+      System.out.println("üũ1");
+      try {
+         list = hdt.call();
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      //System.out.println("üũ2");
+      //System.out.println(list.toString());
+      /*an.setBattery(777);
+      an.setBurst(0);
+      an.setCarId("333");
+      an.setDateEnd("2018-06-01 08:17:45");
+      an.setDateStart("2018-06-01 08:17:45");
+      an.setDeceleration(1);
+      an.setQuickStart(2);
+      an.setSafetyDis(3);
+      an.setSnooze(3);
+      an.setSuddenStop(2);
+      aBiz.register(an);
+      System.out.println("Regist OK!!!");*/
+      System.out.println("üũ3");
+      aBiz.registerAll(list);
+      System.out.println("üũ4");
+   }
+   
 }
