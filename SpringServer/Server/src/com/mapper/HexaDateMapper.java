@@ -12,6 +12,7 @@ public interface HexaDateMapper {
 	public List<Score> selectScore (String s);
 	public List<HexaDate> selectScore2 (String s);
 	public List<HexaDate> selectEffi (String s);
+	public List<HexaDate> selectDistEffi (String s);
 	public List<HexaDate> selectMaxMin();
 	public void insert (HexaDate t);
 	public void insertAll (List<HexaDate> t);

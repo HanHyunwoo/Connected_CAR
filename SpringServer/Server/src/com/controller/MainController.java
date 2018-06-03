@@ -106,6 +106,16 @@ public class MainController {
 		out.close();
 	}
 
+
+	@RequestMapping("wifi.do")
+	public String wifi(HttpServletResponse response, Model m) throws IOException {
+		
+		System.out.println("wifi.do");	
+		m.addAttribute("wifi", 1);
+		return "wifiRequest";
+	}
+	
+	
 	@RequestMapping("/effi2.do")
 	public void effi2(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -243,7 +253,7 @@ public class MainController {
 
 		for (int i = 0; i < distResult.size(); i++) {
 			JSONArray ja = new JSONArray();
-			ja.add(distResult.get(i).getDate());
+			ja.add(Long.parseLong(distResult.get(i).getDate()));
 			ja.add(distResult.get(i).getMin_efficiency());
 			ja.add(distResult.get(i).getMax_efficiency());
 			jArr.add(ja);
@@ -266,11 +276,11 @@ public class MainController {
 
 		String id = request.getParameter("id");
 		JSONArray jArr = new JSONArray();
-		List<HexaDate> effiResult2 = hBiz.selectEffi(id);
+		List<HexaDate> effiResult2 = hBiz.selectDistEffi(id);
 		
 		for (int i = 0; i < effiResult2.size(); i++) {
 			JSONArray ja = new JSONArray();
-			ja.add(effiResult2.get(i).getDate());
+			ja.add(Long.parseLong(effiResult2.get(i).getDate()));
 			ja.add(effiResult2.get(i).getEfficiency());
 			jArr.add(ja);
 		}

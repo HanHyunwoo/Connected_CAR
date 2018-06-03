@@ -69,6 +69,12 @@ public class AnalyzedDao implements Dao<Analyzed, String, Integer>{
 		return null;
 	}
 
+	@Override
+	public List<Analyzed> selectDistEffi(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 
 }

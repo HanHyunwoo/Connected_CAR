@@ -9,8 +9,9 @@
 	background-color: #ffffff;
 	height: 32px;
 	padding: 5px;
-	width: 80%;
+	width: 100%;
 	border-radius: 1px;
+	text-align:right;
 }
 
 .progress-bar span {
@@ -76,32 +77,25 @@ stripes span {
 }
 </style>
 </head>
-<body>
+<body> 
 	<div style="padding-top: 2%;">
-		<h4>BATTERY</h4>
+		<h4 style="color:#404040;">BATTERY per a DRIVE</h4>
 		<div style="width: 100%; height: 100%; padding: 1%; display: flex">
 			<div style="width: 100%; height: 100%">
 				<div class="progress-bar green shine">
-					<span style="width: 100%"></span>
+					<span style="width: 90%; padding-right:4%;">MAX : 90%</span>
 				</div>
-				<div class="progress-bar blue shine">
-					<span style="width: 65%"></span>
+				<div class="progress-bar blue shine" >
+					<span style="width: 75%; padding-right:4%;">AVG : 75%</span>
 				</div>
 				<div class="progress-bar grey">
-					<span style="width: 60%"></span>
+					<span style="width: 60%; padding-right:4%; color: #b3b3b3; text-align:center; padding-left:4%; font-weight: bold;">STANDARD : 60%</span>
 				</div>
 				<div class="progress-bar red shine">
-					<span style="width: 50%"></span>
-				</div>
-			</div>
-			<div style="width: 15%; height: 80%;">
-				<h5>MAX</h5>
-				<h5>AVG</h5>
-				<h5>REG</h5>
-				<h5>MIN</h5>
+					<span style="width: 50%; padding-right:4%;">MIN : 50%</span>
+				</div>			
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

@@ -72,5 +72,11 @@ public class HexaDateBiz implements Biz<HexaDate, String, Integer> {
 		return dao.selectMaxMin();
 	}
 
+	@Override
+	public List<HexaDate> selectDistEffi(String s) {
+		// TODO Auto-generated method stub
+		return dao.selectDistEffi(s);
+	}
+
 }
 	

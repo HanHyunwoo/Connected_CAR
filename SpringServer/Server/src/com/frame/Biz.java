@@ -3,6 +3,7 @@ package com.frame;
 import java.util.HashMap;
 import java.util.List;
 
+import com.vo.HexaDate;
 import com.vo.Score;
 
 public interface Biz<T, S, I> {
@@ -13,6 +14,7 @@ public interface Biz<T, S, I> {
 	public List<T> selectScore2(S s);
 	public List<T> selectEffi(S s);
 	public HashMap<S, I> selectCnt(S s);
+	public List<T> selectDistEffi (String s);
 	public List<T> selectMaxMin();
 	public List<Score> selectScore(S s);
 }

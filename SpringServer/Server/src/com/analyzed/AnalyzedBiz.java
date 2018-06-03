@@ -75,5 +75,11 @@ public class AnalyzedBiz implements Biz<Analyzed, String, Integer> {
 		return null;
 	}
 
+	@Override
+	public List<Analyzed> selectDistEffi(String s) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 	

@@ -51,13 +51,11 @@
 html, body {
 	height: 100%;
 }
-
 .section-size {
 	width: 100%;
 	height: 95.5%;
 	overflow-y: -webkit-paged;
 }
-
 div.dashBoard {
 	background-color: white;
 	padding-top: 1rem;
@@ -66,7 +64,6 @@ div.dashBoard {
 	padding-bottom: 0.5rem;
 	height: 100%;
 }
-
 div.dash-upper {
 	margin: 0.5%;
 	padding: 2%;
@@ -74,7 +71,6 @@ div.dash-upper {
 	background-color: #f8f9fa !important;
 	dispaly: flex;
 }
-
 div.dash-below {
 	margin: 0.5%;
 	padding: 2%;
@@ -82,35 +78,28 @@ div.dash-below {
 	background-color: #f8f9fa !important;
 	height: 39.5%;
 }
-
 .float_right {
 	float: right;
 }
-
 .float_left {
 	float: left;
 }
-
 div.inner-left {
 	width: 49%;
 	height: 100%;
 }
-
 div.inner-right {
 	width: 48%;
 	height: 100%;
 }
-
 div.infoDiv {
 	width: 100%;
 	margin-bottom: 2%;
 	padding: 1%;
 }
-
 div.zc-ref {
 	display: none;
 }
-
 div.chartDiv {
 	margin: 0.5%;
 	float: left;
@@ -121,12 +110,10 @@ div.chartDiv {
 	padding-right: 1%;
 	background-color: #f8f9fa;
 }
-
 img.fullSize {
 	width: 100%;
 	height: 100%;
 }
-
 #overlay {
 	position: fixed;
 	display: none;
@@ -141,7 +128,6 @@ img.fullSize {
 	cursor: pointer;
 	padding: 10%;
 }
-
 #text {
 	position: absolute;
 	top: 50%;
@@ -189,7 +175,6 @@ img.fullSize {
 		function on() {
 			document.getElementById("overlay").style.display = "block";
 		}
-
 		function off() {
 			document.getElementById("overlay").style.display = "none";
 		}
@@ -255,7 +240,7 @@ img.fullSize {
 						</div>
 					</div>
 					<div class="infoDiv"
-						style="width: 100%; height: 59%; background-color: white; padding-top: 4%;">
+						style="width: 100%; height: 59%; background-color: white; padding-top: 4%; color: #404040;">
 						<h2>DRIVING SCORE</h2>
 						<jsp:include page="/charts/hexaChart.jsp"></jsp:include>
 						<!-- <div style="margin: 2%;"></div> -->
@@ -263,25 +248,18 @@ img.fullSize {
 					</div>
 				</div>
 				<div class="inner-right float_right">
-					<div class="infoDiv" style="height: 28%; background-color: white;">
+					<div class="infoDiv" style="height: 23%; background-color: white;">
 						<div style="background-color: #3f51b5; height: 5%"></div>
 						<div style="height: 80%; padding-top: 5%;">
-							<div>
-								<img style="width: 100%; height: auto;" src="img/carImg.png" />
+							<div style="position: relative; z-index: 1;">
+								<img id="wifi" style="width: 100%; height: auto%;" src="img/wifioff.png" />
 							</div>
-						</div>
-						<div style="height: 10%; padding-right: 5%"></div>
-						<!-- 
-               <div style="background-color: #3f51b5; height: 5%; padding-top: 1%;">
-                     <div style="padding:5%; height:80%;"><img style="width: 100%; height: auto;" src="img/carImg.png"/></div>
-                     <div style="height:50%; background-color:black;"></div>
-                  </div> -->
-
+						</div>	
 					</div>
-					<div class="infoDiv" style="height: 41%; background-color: white;">
+					<div class="infoDiv" style="height: 44%; background-color: white;">
 						<div id='donutChart'></div>
 					</div>
-					<div class="infoDiv" style="height: 28%; background-color: white;">
+					<div class="infoDiv" style="height: 30%; background-color: white;">
 						<jsp:include page="/charts/effiVisual.jsp"></jsp:include>
 					</div>
 				</div>
@@ -334,7 +312,6 @@ img.fullSize {
 									title : {
 										text : 'Total percent market share'
 									}
-
 								},
 								legend : {
 									enabled : false
@@ -347,14 +324,11 @@ img.fullSize {
 										}
 									}
 								},
-
 								tooltip : {
 									headerFormat : '<span style="font-size:11px">{series.name}</span><br>',
 									pointFormat : '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
 								},
-
 								colors : [ "#a1abdd" ],
-
 								"series" : [ {
 									"name" : "Browsers",
 									"colorByPoint" : true,
@@ -365,7 +339,6 @@ img.fullSize {
 								}
 							});
 		}
-
 		function effiChart(date, data) {
 			Highcharts.chart('effiChart', {
 				chart : {
@@ -410,39 +383,30 @@ img.fullSize {
 						fillOpacity : 0.5
 					}
 				},
-
 				colors : [ "#3f51b5", "#737373", "#ffffff" ],
 				series : data
 			});
 		}
 		function distChart(rangeFromController, dataFromController) {
-
 			var ranges = rangeFromController, averages = dataFromController;
-
 			Highcharts.chart('distChart', {
-
 				title : {
 					text : 'DistChart'
 				},
-
-				xAxis : {
-					type : 'linear'
-				},
-
+			    xAxis: {
+			        type: 'datetime'
+			    },
 				yAxis : {
 					title : {
 						text : null
 					}
 				},
-
 				tooltip : {
 					crosshairs : true,
 					shared : true,
 					valueSuffix : '°C'
 				},
-
 				legend : {},
-
 				series : [ {
 					name : 'Temperature',
 					color : "#3f51b5",
@@ -468,72 +432,85 @@ img.fullSize {
 				} ]
 			});
 		}
-
 		function donut(donutData) {
-
 			var myConfig = {
-				type : "pie",
-				backgroundColor : "#ffffff",
-				source : {
-					fontColor : "#8e99a9",
-					fontFamily : "Open Sans"
-				},
-				title : {
-					fontColor : "#fff",
-					text : 'Globa',
-					align : "left",
-					offsetX : 10,
-					fontFamily : "Open Sans",
-					fontSize : 14
-				},
-				plotarea : {
-					margin : "30 0 0 0"
-				},
-				series : [ {
-					"backgroundColor" : "#FF5656",
-					"values" : [ 10 ],
-					"text" : "SUN"
-				}, {
-					"backgroundColor" : "#ff9933",
-					"values" : [ 12 ],
-					"text" : "MON"
-				}, {
-					"backgroundColor" : "#ffcc00",
-					"values" : [ 14 ],
-					"text" : "TUE"
-				}, {
-					"backgroundColor" : "#00cc44",
-					"values" : [ 15 ],
-					"text" : "WED"
-				}, {
-					"backgroundColor" : "#50ADF5",
-					"values" : [ 9 ],
-					"text" : "THU"
-				}, {
-					"backgroundColor" : "#000066",
-					"values" : [ 20 ],
-					"text" : "FRI"
-				}, {
-					"backgroundColor" : "#660066",
-					"values" : [ 5 ],
-					"text" : "SAT"
-				} ]
-			};
+				 	type: "pie", 
+				 	backgroundColor: "#ffffff",
+				 	plot: {
+				 	  borderColor: "#f8f9fa",
+				 	  borderWidth: 3,
+				 	  slice: 30,
+				 	  valueBox: {
+				 	    placement: 'in',
+				 	    text: '%t %npv',
+				 	    fontFamily: "Open Sans"
+				 	  },
+				 	  tooltip:{
+				 	    fontSize: '18',
+				 	    fontFamily: "Open Sans",
+				 	    padding: "5 10",
+				 	    text: "%npv"
+				 	  },
+				 	  animation:{
+				      effect: 2, 
+				      method: 5,
+				      speed: 500,
+				      sequence: 1
+				    }
+				 	},
+				 	title: {
+				 	  fontColor: "#404040",
+				 	  text: "Score Each Date",
+				 	  align: "left",
+				 	  offsetX: 90,
+				 	  fontFamily: "Open Sans",
+				 	  fontSize: 21
+				 	},
+				 	plotarea: {
+				 	  margin: "33 0 0 0"  
+				 	},
+					series :[ {
+						"backgroundColor" : "#FF5656",
+						"values" : [ 90 ],
+						"text" : "SUN"
+					}, {
+						"backgroundColor" : "#ff9933",
+						"values" : [ 82 ],
+						"text" : "MON"
+					}, {
+						"backgroundColor" : "#ffcc00",
+						"values" : [ 86 ],
+						"text" : "TUE"
+					}, {
+						"backgroundColor" : "#00cc44",
+						"values" : [ 85 ],
+						"text" : "WED"
+					}, {
+						"backgroundColor" : "#50ADF5",
+						"values" : [ 91 ],
+						"text" : "THU"
+					}, {
+						"backgroundColor" : "#000066",
+						"values" : [ 80 ],
+						"text" : "FRI"
+					}, {
+						"backgroundColor" : "#660066",
+						"values" : [ 95 ],
+						"text" : "SAT"
+					} ]
+				};
 
-			zingchart.render({
-				id : 'donutChart',
-				data : myConfig,
-				height : 250,
-				width : 350
-			});
-
+				zingchart.render({ 
+					id : 'donutChart', 
+					data : myConfig, 
+					height: 260, 
+					width: 350 
+				});
 		}
-
 		$(document).ready(function func() {
 			$.ajax({
 				url : 'donut.do?id=1001',
 				success : function(donutData) {
-
 					donut(donutData);
 				},
 				error : function() {
@@ -591,19 +568,41 @@ img.fullSize {
 					alert('score1 fail');
 				}
 			});
-			/*$.ajax({
-			   url : 'scorechart.do?id=1001',
-			   success : function(data) {
-			      scoreChart(data);
-			   },
-			   error : function() {
-			      alert('data1 fail');
-			   }
-			}); */
-			effiChart();
-			scoreChart();
-			distChart();
+			//checkWifiState();
 		});
+		
+		
+		 
+	      
+        var worker;
+
+        function checkWifiState() {
+
+            if(worker) {                  
+                worker.terminate(); 
+            };
+
+           
+            worker = new Worker("wifiState.js");
+
+            worker.onmessage = function(evt) {
+				if(evt.data == 1){
+			    	document.getElementById("wifi").src = "img/wifion.png";
+				}
+				else{
+			    	document.getElementById("wifi").src = "img/wifioff.png";					
+				}
+            };  
+ 
+            worker.onerror=function(evt) {
+                alert("Error : On Worker");
+            };
+
+            worker.postMessage(1); //postMessage로 jsp와 js간에 dataㄹ 주고 받는다.
+
+        }
+
+        
 	</script>
 	<!-- Bootstrap core JavaScript -->
 	<script src="vendor/jquery/jquery.min.js"></script>

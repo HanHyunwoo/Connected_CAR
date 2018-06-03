@@ -13,6 +13,7 @@ public interface Dao<T, S, I> {
 	public List<T> selectRg(S s);
 	public List<T> selectScore2(S s);
 	public List<T> selectEffi(S s);
+	public List<T> selectDistEffi (String s);
 	public HashMap<S, I> selectCnt(S s);
 	public List<T> selectMaxMin();
 	public List<Score> selectScore(S s);

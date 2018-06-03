@@ -70,5 +70,11 @@ public class HexaDateDao implements Dao<HexaDate, String, Integer>{
 		return mapper.selectMaxMin();
 	}
 
+	@Override
+	public List<HexaDate> selectDistEffi(String s) {
+		// TODO Auto-generated method stub
+		return mapper.selectDistEffi(s);
+	}
+
 	
 }

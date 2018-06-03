@@ -14,8 +14,19 @@ public class HexaDate {
 	String Date;
 	int max_efficiency;
 	int min_efficiency;
+	int temp;
+	
+	
 
 	
+	public int getTemp() {
+		return temp;
+	}
+
+	public void setTemp(int temp) {
+		this.temp = temp;
+	}
+
 	public int getMax_efficiency() {
 		return max_efficiency;
 	}
