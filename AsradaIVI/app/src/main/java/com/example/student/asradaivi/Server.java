@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Server {
-
+    final String TAG = "Server   ::";
     final int accelPedal = 0;
     final int breakPedal = 1;
     final int distance = 2;
@@ -68,6 +68,7 @@ public class Server {
     }
 
     public void sendMsg(int id, int value){
+        Log.d(TAG, "id : "+id+ ", value : "+ value);
         Sender sender = null;
         try {
             if(socket != null)

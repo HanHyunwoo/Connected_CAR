@@ -97,51 +97,101 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_weight="5"
-        android:background="@color/colorGrayDark"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/btn_led"
-            style="@style/wrapping_button"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:background="@android:color/background_light"
-            android:onClick="ClickSensorBTN"
-            android:text="LED OFF"
-            app:buttonMode="toggle"
-            app:roundedCorners="true"
-            app:showOutline="true" />
+            android:gravity="right"
+            android:orientation="vertical">
 
-        <at.markushi.ui.CircleButton
-            android:id="@+id/btn_snooze"
-            android:layout_width="64dip"
-            android:layout_height="64dip"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:onClick="ClickSensorBTN"
-            app:cb_color="@color/colorPrimaryDark" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/btn_wiper"
-            style="@style/wrapping_button"
+            <Button
+                android:id="@+id/btn_left"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/arrows"
+                android:onClick="ClickSensor" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp"
             android:layout_weight="1"
-            android:background="@android:color/background_light"
-            android:onClick="ClickSensorBTN"
-            android:text="Wiper"
-            app:buttonMode="toggle"
-            app:roundedCorners="true"
-            app:showOutline="true" />
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <ToggleButton
+                android:id="@+id/btn_led"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/led_toggle"
+                android:textOff=""
+                android:textOn="" />
 
+            <Button
+                android:id="@+id/btn_c"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/c_button"
+                android:onClick="ClickSensor" />
+
+            <ToggleButton
+                android:id="@+id/btn_wiper"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/wiper_toggle"
+                android:textOff=""
+                android:textOn="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btn_right"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/arrows2"
+                android:onClick="ClickSensor" />
+
+            <ToggleButton
+                android:id="@+id/btn_snooze"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:background="@drawable/snooze_toggle"
+                android:textOff=""
+                android:textOn="" />
+                android:text="ToggleButton" />
+
+        </LinearLayout>
     </LinearLayout>
 
 

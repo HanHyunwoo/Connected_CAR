@@ -11,11 +11,13 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.arsy.maps_library.MapRadar;
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -54,12 +56,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     SimpleDateFormat time;
     WebView wv_score, wv_energy;
     GoogleMap mMap;
-    BootstrapButton btn_led, btn_wiper;
-    CircleButton btn_snooze;
     MapManager mapManager;
     private MapRadar mapRadar;
     ContactAdapter contactAdapter;
-
+    ToggleButton btn_led, btn_wiper, btn_snooze;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ll_call.setVisibility(View.VISIBLE);
 
         // List View setting
-        LinearLayout container =  findViewById(R.id.container_h);
+        LinearLayout container = findViewById(R.id.container_h);
         contactAdapter = new ContactAdapter(this, container);
 
         ListView listView = findViewById(R.id.contactlist);
@@ -111,31 +111,37 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         time = new SimpleDateFormat("yyyy년MM월dd일 hh:mm:ss a");
 
         btn_led = findViewById(R.id.btn_led);
-        btn_led.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+        btn_led.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
-                if (isChecked) {
-                    bootstrapButton.setText("LED OFF");
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
                     server.sendMsg(5, 2);
                 } else {
-                    bootstrapButton.setText("LED ON");
                     server.sendMsg(5, 1);
                 }
             }
         });
 
-        btn_snooze = findViewById(R.id.btn_snooze);
-
         btn_wiper = findViewById(R.id.btn_wiper);
-        btn_wiper.setOnCheckedChangedListener(new BootstrapButton.OnCheckedChangedListener() {
+        btn_wiper.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void OnCheckedChanged(BootstrapButton bootstrapButton, boolean isChecked) {
-                if (isChecked) {
-                    bootstrapButton.setText("Wiper 작동 중지");
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
                     server.sendMsg(6, 2);
                 } else {
-                    bootstrapButton.setText("Wiper 작동");
                     server.sendMsg(6, 1);
+                }
+            }
+        });
+
+        btn_snooze =findViewById(R.id.btn_snooze);
+        btn_snooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    server.sendMsg(7, 2);
+                } else {
+                    server.sendMsg(7, 1);
                 }
             }
         });
@@ -173,6 +179,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    public void ClickSensor(View v) {
+        if (v.getId() == R.id.btn_c) {
+            server.sendMsg(5, 1);
+        } else if (v.getId() == R.id.btn_left) {
+            server.sendMsg(5, 1);
+        } else if (v.getId() == R.id.btn_right) {
+            server.sendMsg(5, 1);
+        }
+    }
+
     public void ClickBTN(View v) {
         if (v.getId() == R.id.tv_home) {
             changeMenuColor(MENU_HOME);
@@ -180,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ll_home.setVisibility(View.VISIBLE);
             ll_call.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
-        }  else if (v.getId() == R.id.tv_score) {
+        } else if (v.getId() == R.id.tv_score) {
             contactAdapter.initContacts();
             changeMenuColor(MENU_SCORE);
             mapManager.setMapView(false);
@@ -195,14 +211,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             initializeMap(mMap);
             if (mapManager != null)
                 mapManager.setMapView(true);
-        }
-    }
-
-    public void ClickSensorBTN(View v) {
-        if(btn_snooze.isPressed()) {
-            btn_snooze.setPressed(true);
-        } else {
-            btn_snooze.setPressed(false);
         }
     }
 
@@ -286,6 +294,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .snippet(parking.getVicinity())
                             .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.parking)));
                 } else {
+                    Log.d(TAG, "paid parking lot" + parking.getName() +", " + parking.getPrice());
                     mMap.addMarker(new MarkerOptions()
                             .position(parking.getLatLng())
                             .title(parking.getName())
