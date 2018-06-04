@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.HexaDateMapper">
+
+	<!-- parameterType db에 넘겨줄때 필요함, 파라미터analyzed는 mybatis에 정의되어있다. -->
+	<!-- id="insert"는 UserMapper.java의 인터페이스메소드이름과 같아야한다. -->
+	
+	
+	<select id="selectId" parameterType="string" resultType="hexadate">
+	SELECT * FROM HEXADATE WHERE CARID = #{obj}
+	</select>
+	
+	
+	<!-- 날짜, 베터리 효율 최대, 베터리 효율 최소, user 베터리 효율, 베터리 평균 -->	
+	<!--  -->
+	<select id="selectRg" parameterType="string" resultType="hexadate">
+		
+	</select>
+	
+	<select id="selectScore" parameterType="string" resultType="score">
+	select to_char(daydate,'mm-dd') "date",SCORE from HexaDate where carid=#{obj}
+	</select>
+	
+	<select id="selectEffi" parameterType="string" resultType="hexadate">
+	select to_char(daydate,'mm-dd') "date", efficiency from HexaDate where carid=#{obj} ORDER BY to_char(daydate,'mm-dd')
+	</select>
+	
+	<select id="selectDistEffi" parameterType="string" resultType="hexadate">
+	select trunc(daydate - to_date('19700101', 'yyyymmdd')) * 60 * 60 * 24 * 1000+ to_char(daydate,'sssss') "Date", efficiency from HexaDate where carid=#{obj} ORDER BY to_char(daydate,'mm-dd')
+	</select>
+	
+	<select id="selectScore2" parameterType="string" resultType="hexadate">
+	select  to_char(daydate,'mm-dd') "date" ,c_Burst,c_Deceleration,c_QuickStart,c_SuddenStop,c_SafetyDis,c_Snooze 
+from HexaDate where carid=#{obj}
+	</select>
+	
+	<select id="selectMaxMin" resultType="hexadate">
+	select trunc(daydate - to_date('19700101', 'yyyymmdd')) * 60 * 60 * 24 * 1000+ to_char(daydate,'sssss') "Date" ,max(efficiency) max_efficiency, min(efficiency) min_efficiency from HexaDate group by DayDate ORDER BY to_char(daydate,'mm-dd') 
+	</select>
+	
+	
+</mapper>

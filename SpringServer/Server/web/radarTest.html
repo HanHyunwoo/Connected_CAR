@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Hex Chart</title>
+        <link rel="shortcut icon" href="icon.png" />
+
+        <script src="hexagon-chart.js"></script>
+        <link rel="stylesheet" type="text/css" href="bootstrap3/css/bootstrap.min.css">
+
+        <style>
+        body,li {
+            font-family : 微软雅黑,-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+        #base_container {
+            padding: 100px
+        }
+
+        </style>
+    </head>
+    <body>
+        <div id="base_container" class="container-fluid text-center">
+
+            <div class="col-md-6">
+                <canvas id="demo"></canvas>
+            </div>
+
+           
+
+        </div>
+        <script>
+            function getValueByID(id) {
+                return document.getElementById(id).value;
+            }
+
+            function fresh() {
+                var str = getValueByID('PUSH-UPS') / 10;
+                var agi = getValueByID('SQUATS') / 10;
+                var mag = getValueByID('PULL-UPS') / 10;
+                var hp = getValueByID('LEG-RAISES') / 10;
+                var mp = getValueByID('BRIDGES') / 10;
+                var def = getValueByID('HANDSTAND PUSH-UPS') / 10;
+
+                hexagon.init('demo', 180, ['PU', 'SQ', 'PL', 'LR', 'BR', 'HU']);
+                hexagon.draw([str, agi, mag, hp, mp, def]);
+            }
+
+            fresh ();
+        </script>
+    </body>
+</html>

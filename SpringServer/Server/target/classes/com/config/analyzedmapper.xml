@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.AnalyzedMapper">
+
+	<!-- parameterType db에 넘겨줄때 필요함, 파라미터analyzed는 mybatis에 정의되어있다. -->
+	<!-- id="insert"는 UserMapper.java의 인터페이스메소드이름과 같아야한다. -->
+
+	<insert id="insert" parameterType="analyzed">
+		<!-- 파라미터user(Analyzed.java)에 정의되어있는 변수이름이랑 같아야한다. 끝에 ;있으면 안됨 -->
+		insert into Analyzed values (#{CarId},TO_DATE(#{DateStart},'yyyy-mm-dd hh24:mi:ss'),TO_DATE(#{DateEnd},'yyyy-mm-dd hh24:mi:ss'),#{Burst},#{Deceleration},#{QuickStart},#{SuddenStop},#{SafetyDis},#{Snooze},#{Battery})
+		<!-- insert into Analyzed values
+		(#{CarId},#{DateStart},#{DateEnd},${Burst},${Deceleration},${QuickStart},${SuddenStop},${SafetyDis},${Snooze},${Battery}) -->
+	</insert>
+	
+	<select id="selectId" parameterType="string" resultType="analyzed">
+		SELECT * FROM ANALYZED WHERE CarId = #{obj}
+	</select>
+	
+	<select id="selectCnt" parameterType="string" resultType="java.util.HashMap">
+		SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart) c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze) c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+	</select>
+</mapper>
