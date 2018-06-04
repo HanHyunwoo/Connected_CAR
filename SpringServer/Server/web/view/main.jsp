@@ -568,7 +568,7 @@ img.fullSize {
 					alert('score1 fail');
 				}
 			});
-			//checkWifiState();
+			checkWifiState();
 		});
 		
 		

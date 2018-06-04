@@ -10,7 +10,6 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 </head>
 <body>
-	<h2>effiChart.jsp</h2>
 	<div id="effiChart"
 		style="width: 100%; height: 100%; margin: 0 auto"></div>
 	<script>

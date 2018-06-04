@@ -1,6 +1,7 @@
 package com.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,9 +80,9 @@ public class MainController {
 		System.out.println("---[dount.do]----------------");
 		System.out.println(jArr.toString());
 		// System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
-		out.println(jArr.toJSONString());
-		out.close();
+		ServletOutputStream out1 = response.getOutputStream();
+		out1.println(jArr.toJSONString());
+		out1.close();
 
 	}
 
@@ -100,19 +101,23 @@ public class MainController {
 		}
 		System.out.println("---[Effi1.do]-----------------");
 		System.out.println(jArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out2 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
-		out.close();
+		out2.println(jArr.toJSONString());
+		out2.close();
 	}
 
 
 	@RequestMapping("wifi.do")
-	public String wifi(HttpServletResponse response, Model m) throws IOException {
+	public void wifi(HttpServletRequest request, HttpServletResponse response, Model m) throws IOException {
 		
-		System.out.println("wifi.do");	
-		m.addAttribute("wifi", 1);
-		return "wifiRequest";
+		System.out.println("wifi.do");	ServletOutputStream out = response.getOutputStream();
+		
+		ServletOutputStream wifiOut = response.getOutputStream();
+		wifiOut.println("1");
+		wifiOut.close();
+//		request.setAttribute("state", "1");
+//		return "wifiRequest";
 	}
 	
 	
@@ -144,12 +149,74 @@ public class MainController {
 
 		System.out.println("---[Effi2.do]-----------------");
 		System.out.println(jArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out3 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
-		out.close();
+		out3.println(jArr.toJSONString());
+		out3.close();
 	}
 
+	
+	
+
+	@RequestMapping("/iviEffi1.do")
+	public void iviEffi(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setCharacterEncoding("EUC-KR");
+		response.setContentType("application/json");
+
+		String id = "1001";
+		List<HexaDate> resultEffi = hBiz.selectEffi(id);
+		JSONArray jArr = new JSONArray();
+
+		for (int i = 0; i < resultEffi.size(); i++) {
+			jArr.add(resultEffi.get(i).getDate());
+		}
+		System.out.println("---[iviEffi1.do]-----------------");
+		System.out.println(jArr.toString());
+		ServletOutputStream out4 = response.getOutputStream();
+		 
+		out4.println(jArr.toJSONString());
+		out4.close();
+	}
+	
+
+	
+	@RequestMapping("/iviEffi2.do")
+	public void iviEffi2(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		response.setCharacterEncoding("EUC-KR");
+		response.setContentType("application/json");
+
+		String id = "1001";
+		String names[] = { id, "STANDARD" };
+
+		List<HexaDate> resultEffi2 = hBiz.selectEffi(id);
+
+		JSONArray jArr = new JSONArray();
+		for (int i = 0; i < 2; i++) {
+			JSONObject jo = new JSONObject();
+			jo.put("name", names[i]);
+			JSONArray jArrInner = new JSONArray();
+			for (int j = 0; j < resultEffi2.size(); j++) {
+				if(i==0)
+					jArrInner.add(resultEffi2.get(j).getEfficiency());
+				else if(i==1)
+					jArrInner.add(70);
+			}
+			jo.put("data", jArrInner);
+			jArr.add(jo);
+		}
+
+		System.out.println("---[iviEffi2.do]-----------------");
+		System.out.println(jArr.toString());
+		ServletOutputStream out5 = response.getOutputStream();
+		 
+		out5.println(jArr.toJSONString());
+		out5.close();
+	}
+	
+	
+	
 	@RequestMapping("/score1.do")
 	public void score(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -171,11 +238,11 @@ public class MainController {
 
 		System.out.println(jArr.toString());
 
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out6 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
+		out6.println(jArr.toJSONString());
 
-		out.close();
+		out6.close();
 	}
 
 	@RequestMapping("/score2.do")
@@ -235,10 +302,10 @@ public class MainController {
 		}
 
 		System.out.println(jArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out7 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
-		out.close();
+		out7.println(jArr.toJSONString());
+		out7.close();
 	}
 
 	@RequestMapping("/dist1.do")
@@ -260,10 +327,10 @@ public class MainController {
 		}
 		System.out.println("dist1 : ");
 		System.out.println(jArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out8 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
-		out.close();
+		out8.println(jArr.toJSONString());
+		out8.close();
 	}
 
 	@RequestMapping("/dist2.do")
@@ -286,12 +353,55 @@ public class MainController {
 		}
 		System.out.println("dist2 : ");
 		System.out.println(jArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out9 = response.getOutputStream();
 		 
-		out.println(jArr.toJSONString());
-		out.close();
+		out9.println(jArr.toJSONString());
+		out9.close();
 	}
 
+	@RequestMapping("/ivihexa.do")
+	public String ivihexa(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		System.out.println("ivihexa.do");
+		response.setCharacterEncoding("EUC-KR");
+		response.setContentType("application/json");
+
+		String CarId = "1001";
+		System.out.println("ivihexa.do] id : " + CarId);
+		Analyzed anId = new Analyzed();
+		anId.setCarId(CarId);
+		HashMap<String, Integer> result = aBiz.selectCnt(anId.getCarId());
+		System.out.println(result.toString());
+		int a[] = new int[6];
+		a[0] = Integer.parseInt(String.valueOf(result.get("C_BURST")));
+		a[1] = Integer.parseInt(String.valueOf(result.get("C_QUICK")));
+		a[2] = Integer.parseInt(String.valueOf(result.get("C_SUDDEN")));
+		a[3] = Integer.parseInt(String.valueOf(result.get("C_DECEL")));
+		a[4] = Integer.parseInt(String.valueOf(result.get("C_SNOOZE")));
+		a[5] = Integer.parseInt(String.valueOf(result.get("C_SAFETY")));
+
+		System.out.println("C_BURST : " + result.get("C_BURST") + a[0]);
+
+		JSONArray jArr = new JSONArray();
+		// SELECT sum(Burst) c_BURST, sum(Deceleration) c_DECEL, sum(QuickStart)
+		// c_QUICK, sum(SuddenStop) c_SUDDEN, sum(SafetyDis) c_SAFETY, sum(Snooze)
+		// c_SNOOZE FROM ANALYZED WHERE CarId = #{obj}
+
+		for (Integer index : a) {
+			jArr.add(80 - index);
+		}
+
+		JSONArray jsonArr = new JSONArray();
+		jsonArr.add(jArr);
+
+		// System.out.println(jsonArr.toString());
+		ServletOutputStream out10 = response.getOutputStream();
+		 
+		out10.println(jsonArr.toJSONString());
+		out10.close();
+
+			return "charts/hexaChart2";
+	}
+	
 	@RequestMapping("/hexa.do")
 	public String hexa(Model m, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -327,12 +437,12 @@ public class MainController {
 		jsonArr.add(jArr);
 
 		// System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out11 = response.getOutputStream();
 		 
-		out.println(jsonArr.toJSONString());
-		out.close();
+		out11.println(jsonArr.toJSONString());
+		out11.close();
 
-		return "main";
+			return "main";
 	}
 
 	@RequestMapping("/hexa2.do")
@@ -369,12 +479,15 @@ public class MainController {
 		JSONArray jsonArr = new JSONArray();
 		jsonArr.add(jArr);
 		// System.out.println(jsonArr.toString());
-		ServletOutputStream out = response.getOutputStream();
+		ServletOutputStream out12 = response.getOutputStream();
 		 
-		out.println(jsonArr.toJSONString());
-		out.close();
+		out12.println(jsonArr.toJSONString());
+		out12.close();
 
 	}
+	
+	
+	
 
 	@RequestMapping("/logAdd.do") // logApply
 	public String apply(HttpServletRequest res) {
