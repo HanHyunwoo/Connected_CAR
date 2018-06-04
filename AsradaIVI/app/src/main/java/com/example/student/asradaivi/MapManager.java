@@ -156,6 +156,10 @@ public class MapManager {
                     e.printStackTrace();
                 }
 
+                while(!mapView) {
+
+                }
+
                 m.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -169,6 +173,10 @@ public class MapManager {
                     e.printStackTrace();
                 }
 
+                while(!mapView) {
+
+                }
+
                 m.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -180,6 +188,10 @@ public class MapManager {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+
+                while(!mapView) {
+
                 }
 
                 m.runOnUiThread(new Runnable() {

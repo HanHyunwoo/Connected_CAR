@@ -6,35 +6,79 @@
     android:layout_height="wrap_content"
     android:background="@android:color/background_light">
 
-    <TextView
-        android:id="@+id/tv_home"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="1dp"
         android:layout_weight="1"
-        android:onClick="ClickBTN"
-        android:text="HOME"
-        android:textColor="@color/colorPrimaryDark"
-        style="@style/menu_text"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_score"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="1dp"
-        android:layout_weight="1"
-        android:onClick="ClickBTN"
-        android:text="CALL"
-        style="@style/menu_text"/>
+        <TextView
+            android:id="@+id/tv_home"
+            style="@style/menu_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="ClickBTN"
+            android:text="HOME"
+            android:textColor="@color/colorPrimaryDark" />
 
-    <TextView
-        android:id="@+id/tv_analysis"
+        <LinearLayout
+            android:id="@+id/sp_home"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="1dp"
         android:layout_weight="1"
-        android:onClick="ClickBTN"
-        android:text="ANALYSIS"
-        style="@style/menu_text"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_score"
+            style="@style/menu_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="ClickBTN"
+            android:text="CALL" />
+
+        <LinearLayout
+            android:id="@+id/sp_score"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_analysis"
+            style="@style/menu_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="ClickBTN"
+            android:text="ANALYSIS" />
+
+        <LinearLayout
+            android:id="@+id/sp_analysis"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

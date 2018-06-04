@@ -1,8 +1,6 @@
 package com.example.student.asradaivi;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,19 +8,13 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.arsy.maps_library.MapRadar;
-import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.BootstrapText;
-import com.beardedhen.androidbootstrap.font.MaterialIcons;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -32,15 +24,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-
-import at.markushi.ui.CircleButton;
-
-import static com.beardedhen.androidbootstrap.font.FontAwesome.FA_HEART;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -49,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final int MENU_SCORE = 1;
     private final int MENU_ANALYSIS = 2;
     Server server;
-    LinearLayout ll_menu, ll_call, ll_map, ll_home;
+    LinearLayout ll_menu, ll_call, ll_map, ll_home, ll_eye;
     TextView tv_time;
-    TextView[] menu = new TextView[3];
+    LinearLayout[] menu = new LinearLayout[3];
     Date dt;
     SimpleDateFormat time;
     WebView wv_score, wv_energy;
@@ -59,7 +44,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     MapManager mapManager;
     private MapRadar mapRadar;
     ContactAdapter contactAdapter;
-    ToggleButton btn_led, btn_wiper, btn_snooze;
+    ToggleButton btn_led, btn_wiper, btn_snooze, btn_eye;
+    int checkR, checkL, checkC;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +56,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        checkR = 0;
+        checkL = 0;
+        checkC = 0;
+
         try {
             server = new Server();
             server.start.execute();
@@ -76,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d(TAG, e.getMessage());
         }
 
-        menu[0] = findViewById(R.id.tv_home);
-        menu[1] = findViewById(R.id.tv_score);
-        menu[2] = findViewById(R.id.tv_analysis);
+        menu[0] = findViewById(R.id.sp_home);
+        menu[1] = findViewById(R.id.sp_score);
+        menu[2] = findViewById(R.id.sp_analysis);
 
         wv_score = findViewById(R.id.wv_score);
         wv_energy = findViewById(R.id.wv_energy);
@@ -89,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         WebSettings webSettings2 = wv_energy.getSettings();
         webSettings2.setJavaScriptEnabled(true);
         wv_score.loadUrl(ApplicationData.score_url);
+        wv_score.setInitialScale(220);
+        wv_energy.loadUrl(ApplicationData.energy_url);
+
 
         ll_home = findViewById(R.id.ll_home);
         ll_home.setVisibility(View.VISIBLE);
@@ -106,6 +100,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         ll_map = findViewById(R.id.ll_map);
         ll_map.setVisibility(View.INVISIBLE);
+        ll_eye = findViewById(R.id.ll_eye);
+        ll_eye.setVisibility(View.INVISIBLE);
 
         tv_time = findViewById(R.id.tv_time);
         time = new SimpleDateFormat("yyyy년MM월dd일 hh:mm:ss a");
@@ -115,9 +111,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    server.sendMsg(5, 2);
-                } else {
                     server.sendMsg(5, 1);
+                } else {
+                    server.sendMsg(5, 2);
                 }
             }
         });
@@ -127,21 +123,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    server.sendMsg(6, 2);
-                } else {
                     server.sendMsg(6, 1);
+                } else {
+                    server.sendMsg(6, 2);
                 }
             }
         });
 
-        btn_snooze =findViewById(R.id.btn_snooze);
+        btn_snooze = findViewById(R.id.btn_snooze);
         btn_snooze.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    server.sendMsg(7, 2);
-                } else {
                     server.sendMsg(7, 1);
+                } else {
+                    server.sendMsg(7, 2);
                 }
             }
         });
@@ -170,32 +166,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void changeMenuColor(int index) {
         for (int i = 0; i < menu.length; i++) {
             if (i == index) {
-                menu[i].setBackgroundResource(R.color.colorAccent);
-                menu[i].setTextColor(getResources().getColor(android.R.color.background_light));
+                menu[i].setBackgroundResource(R.color.colorLightBlue);
+                //menu[i].setTextColor(getResources().getColor(android.R.color.background_light));
             } else {
-                menu[i].setBackgroundResource(android.R.color.background_light);
-                menu[i].setTextColor(getResources().getColor(R.color.colorAccent));
+                menu[i].setBackgroundResource(R.color.colorGray);
+                //menu[i].setTextColor(getResources().getColor(R.color.colorLightBlue));
             }
         }
     }
 
     public void ClickSensor(View v) {
         if (v.getId() == R.id.btn_c) {
-            server.sendMsg(5, 1);
+            if (checkC % 2 == 0) {
+                server.sendMsg(8, 3);
+                checkC++;
+            } else {
+                server.sendMsg(8, 4);
+                checkC++;
+            }
         } else if (v.getId() == R.id.btn_left) {
-            server.sendMsg(5, 1);
+            if (checkL % 2 == 0) {
+                server.sendMsg(8, 2);
+                checkL++;
+            } else {
+                server.sendMsg(8, 4);
+                checkL++;
+            }
         } else if (v.getId() == R.id.btn_right) {
-            server.sendMsg(5, 1);
+            if (checkR % 2 == 0) {
+                server.sendMsg(8, 1);
+                checkR++;
+            } else {
+                server.sendMsg(8, 4);
+                checkR++;
+            }
         }
     }
 
     public void ClickBTN(View v) {
         if (v.getId() == R.id.tv_home) {
+            wv_score.loadUrl(ApplicationData.score_url);
+            wv_score.setInitialScale(220);
+            wv_energy.loadUrl(ApplicationData.energy_url);
             changeMenuColor(MENU_HOME);
             mapManager.setMapView(false);
             ll_home.setVisibility(View.VISIBLE);
             ll_call.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
+            ll_eye.setVisibility(View.INVISIBLE);
         } else if (v.getId() == R.id.tv_score) {
             contactAdapter.initContacts();
             changeMenuColor(MENU_SCORE);
@@ -203,14 +221,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ll_call.setVisibility(View.VISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
             ll_map.setVisibility(View.INVISIBLE);
+            ll_eye.setVisibility(View.INVISIBLE);
         } else if (v.getId() == R.id.tv_analysis) {
             changeMenuColor(MENU_ANALYSIS);
             ll_map.setVisibility(View.VISIBLE);
+            ll_eye.setVisibility(View.VISIBLE);
             ll_home.setVisibility(View.INVISIBLE);
             ll_call.setVisibility(View.INVISIBLE);
             initializeMap(mMap);
-            if (mapManager != null)
-                mapManager.setMapView(true);
         }
     }
 
@@ -219,6 +237,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d(TAG, "onMapReady");
         mMap = googleMap;
         mapManager = new MapManager(this, googleMap);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ApplicationData.currentLatLng, 17));
+
+        btn_eye = findViewById(R.id.btn_eye);
+        btn_eye.setChecked(true);
+        btn_eye.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
+                    mapManager.setMapView(false);
+                } else {
+                    mapManager.setMapView(true);
+                }
+            }
+        });
     }
 
     public void addCurrentLoc(final LatLng latLng) {
@@ -284,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public void addMarker(final Parking parking) {
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -294,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .snippet(parking.getVicinity())
                             .icon(com.google.android.gms.maps.model.BitmapDescriptorFactory.fromResource(R.drawable.parking)));
                 } else {
-                    Log.d(TAG, "paid parking lot" + parking.getName() +", " + parking.getPrice());
+                    Log.d(TAG, "paid parking lot" + parking.getName() + ", " + parking.getPrice());
                     mMap.addMarker(new MarkerOptions()
                             .position(parking.getLatLng())
                             .title(parking.getName())
