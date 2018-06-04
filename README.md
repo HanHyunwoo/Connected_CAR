@@ -3,16 +3,34 @@ ASRADA PROJECT
 
 ## Outline
 
- - **server**
 
-- **portable_server**
-	 - Android Application : cluster, IVI
+server
+======
+
+
+----------
+portable_server
+===============
+
+Cluster
+-------
+
+
+
+IVI
+---
+Google Maps API
+
+> In order to run this application on your phone you'll first need to
+> get an API key.  Instructions on how to setup your API key can be
+> found in the [  blog](https://yumdevelop.blogspot.kr/2018/04/android-googlemaps-api.html).
+
 	 
 
-    
-    
+----------
 car
----
+===
+
 	To portable_client
 	
 	send value     
@@ -35,8 +53,11 @@ car
     | led            |  6  |           0-1             |
     +--------------------------------------------------+
 
+
+----------
+
 portable_client
----------------
+===============
 	
 	To car
 	send value     
